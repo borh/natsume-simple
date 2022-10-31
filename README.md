@@ -55,7 +55,7 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 ここでは，係り受け関係の抽出はすべてノートブック上で行う。
 
 VS Codeなどでは，使用したいPythonの環境を選択の上，実行してください。
-Google Colabで使用する場合は，下記のリンクから開くか，`pattern_extraction_colab.ipynb`のファイルをColabにアップロードして利用する。
+Google Colabで使用する場合は，[リンク](https://colab.research.google.com/drive/1pb7MXf2Q-4MkadWHmzUrb-qXsAVG4--T?usp=sharing)から開くか，`pattern_extraction_colab.ipynb`のファイルをColabにアップロードして利用する。
 
 Jupyter Notebook/JupyterLabでは使用したPythonの環境をインストールの上，Jupterを立ち上げてください。
 
