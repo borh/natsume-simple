@@ -1,25 +1,35 @@
-from collections import defaultdict
-from typing import Optional
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import pandas as pd
-from collections import defaultdict, Counter
+
 
 app = FastAPI()
 
+model_name = "ja_ginza_electra"
+db = pd.read_csv(f"data/ted_npvs_{model_name}.csv")
+db = pd.concat([db, pd.read_csv(f"data/jnlp_npvs_{model_name}.csv")])
+# NPV＋コーパスごとに集計したいので，Pandasのvalue_counts()を利用し，その結果SeriesオブジェクトをDataFrameに戻す
+db = db.value_counts().to_frame(name="frequency").reset_index()
 
-db = pd.read_csv("data/ted_npvs.csv")
+# コーパス間の頻度が比べるために一番小さいコーパスのNPVの数で正規化する
+corpus_freqs: dict[str, int] = {corpus: db[db.corpus == corpus]["frequency"].sum() for corpus in db.corpus.unique()}
+min_count = min(corpus_freqs.values())
+corpus_norm = {corpus: min_count/frequency for corpus, frequency in corpus_freqs.items()}
+
+print(corpus_norm)
+
+@app.get("/corpus/norm")
+def get_corpus_norm():
+    return corpus_norm
 
 
 @app.get("/npv/noun/{noun}")
 def read_npv(noun: str):
-    matches = db[db.n == noun][["p", "v"]].to_records(index=False)
-    results = defaultdict(Counter)
-    for p, v in matches:
-        results[p][v] += 1
-    return {"results": [{'p': particle, 'v': verb, 'f': frequency}
-                        for particle, vf in results.items()
-                        for verb, frequency in vf.items()]}
+    matches = db[db.n == noun].drop(columns=["n"]).to_dict("records") # nは検索語と同じなので，省略できる
+    return matches
 
 
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+app.mount(
+    "/app", StaticFiles(directory="svelte-frontend/public", html=True), name="app"
+)
