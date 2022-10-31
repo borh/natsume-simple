@@ -23,7 +23,8 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 │   └── ted_corpus.txt
 ├── environment.yml              # conda仮想環境用
 ├── notebooks                    # ノートブック
-│   └── pattern-extraction.ipynb
+│   ├── pattern-extraction.ipynb
+│   └── pattern_extraction_colab.ipynb # Google Colab用
 ├── Pipfile                      # pipenv仮想環境用
 ├── pyproject.toml               # poetry仮想環境用
 ├── README.md                    # このファイル
@@ -51,8 +52,10 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 ### notebooks
 
 特に動的なプログラミングをするときや，データの性質を確認したいときに活用する。
+ここでは，係り受け関係の抽出はすべてノートブック上で行う。
 
 VS Codeなどでは，使用したいPythonの環境を選択の上，実行してください。
+Google Colabで使用する場合は，下記のリンクから開くか，`pattern_extraction_colab.ipynb`のファイルをColabにアップロードして利用する。
 
 Jupyter Notebook/JupyterLabでは使用したPythonの環境をインストールの上，Jupterを立ち上げてください。
 
