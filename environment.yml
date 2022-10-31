@@ -1,0 +1,13 @@
+name: ginza
+channels:
+  - defaults
+dependencies:
+  - pip
+  - numpy
+  - pandas
+  - pip:
+    -  ginza>=5.1.2
+    -  ja-ginza>=5.1.2
+    -  datasets>=2.5.2
+    -  fastapi>=0.85.0
+    -  uvicorn[standard]

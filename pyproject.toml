@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "natsume-simple"
+version = "0.1.0"
+description = "simple dependency relation search engine for Japanese"
+authors = ["Bor Hodošček <dev@bor.space>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+ginza = "5.1.2"
+# We keep GiNZA pinned to have reproducible results
+ja_ginza = "5.1.2"
+ja_ginza_electra = { version = "5.1.2", optional = true }
+datasets = "~2.5.2"
+duckdb = "^0.5.1"
+fastapi = "^0.85.0"
+uvicorn = { version = "^0.19.0", extras = ["standard"] }
+
+[tool.poetry.extras]
+electra = ["ja_ginza_electra"]
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
