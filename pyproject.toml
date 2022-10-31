@@ -6,7 +6,7 @@ authors = ["Bor Hodošček <dev@bor.space>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 ginza = "5.1.2"
 # We keep GiNZA pinned to have reproducible results
 ja_ginza = "5.1.2"
