@@ -126,6 +126,13 @@ pip install -r requirements.txt
 pip install ja_ginza_electra
 ```
 
+GPUがあれば，上記の`requirements.txt`の代わりに以下のコマンドで一括インストールできる：
+
+```bash
+pip install -r requirements-electra.txt
+```
+
+
 ### GPU
 
 GPUの利用には，OSでの適切なドライバとCuDNNなどのペッケージのインスールの他，GPU対応のspaCyやPyTorchのインストールも必要になる。
