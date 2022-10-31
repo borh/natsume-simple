@@ -1,0 +1,5 @@
+ginza==5.0.2
+ja-ginza==5.0.0
+datasets==1.12.1
+fastapi==0.70.0
+uvicorn[standard]
