@@ -132,6 +132,7 @@ GPUがあれば，上記の`requirements.txt`の代わりに以下のコマン�
 pip install -r requirements-electra.txt
 ```
 
+`requirements.txt`及び`requirements-electra.txt`はPoetryで自動生成される。
 
 ### GPU
 
@@ -178,17 +179,38 @@ Pythonは従来バージョン2と3にわかれていて，OSとそのバージ�
 現在ではPython 2を使う場面がほとんどないが，同じくpython2で指定することができる。
 また，将来的にはPython 2がインストールされず，pythonが常に3を指すことになる。
 
-#### virtualenv仮想環境
+### virtualenv仮想環境
 
 上記pipインストールで問題が発生すると，使用するPythonが3.8かそれより最新のものであることを確認するとよい。
-また，他のパッケージとの干渉を除外するために簡単な仮想環境を作る方法がある。
+また，他のパッケージとの干渉を除外するために[簡単な仮想環境](https://xkcd.com/1987/)を作る方法がある。
 Python内蔵の仮想環境を作成する場合は[ここ](https://docs.python.org/ja/3/tutorial/venv.html)を参照。
 
 上記の手動の仮想環境作成以外にも，poetry, pipenv, condaの環境・システムがある。
 2022年10月時点では，poetryとその`pyproject.toml`の定義ファイルが人気であろう。
 Anacondaも総括的な環境提供という点で人気である。
 
-### conda
+#### poetry
+
+[Poetry](https://python-poetry.org/)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`pyproject.toml`で記述されている。
+Poetryを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
+
+```bash
+poetry install
+```
+あるいはja_ginza_electraモデル使用時：
+```bash
+poetry install -E electra
+```
+
+上記により`poetry.lock`というファイルが作成される。中身は`pyproject.toml`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
+
+```bash
+poetry shell
+```
+
+脱出方法は`deactivate`（またはControl+d）。
+
+#### conda
 
 conda (Anaconda)では付属の`environment.yml`の定義を読み，`ginza`という仮想環境にインストールする：
 
@@ -212,28 +234,7 @@ conda update conda
 conda install anaconda=2021.05
 ```
 
-### poetry
-
-[Poetry](https://python-poetry.org/)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`pyproject.toml`で記述されている。
-Poetryを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
-
-```bash
-poetry install
-```
-あるいはja_ginza_electraモデル使用時：
-```bash
-poetry install -E electra
-```
-
-上記により`poetry.lock`というファイルが作成される。中身は`pyproject.toml`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
-
-```bash
-poetry shell
-```
-
-脱出方法は`deactivate`（またはControl+d）。
-
-### pipenv
+#### pipenv
 
 [Pipenv](https://github.com/pypa/pipenv)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`Pipfile`で記述されている。
 Pipenvを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
