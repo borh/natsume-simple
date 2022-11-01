@@ -28,6 +28,7 @@ electra = ["ja_ginza_electra", "torch", "spacy", "cupy-cuda11x"]
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.16.2"
+ipywidgets = "^8.0.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
