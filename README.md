@@ -133,6 +133,12 @@ pip install -r requirements-electra.txt
 ```
 
 `requirements.txt`及び`requirements-electra.txt`はPoetryで自動生成される。
+Google Colabとの相互性を保つために，ややゆるいバージョン指定をしている（Pythonが3.7のため）。
+
+```bash
+poetry export --without-hashes --without-urls | sed "s/ ;.*//" > requirements.txt
+poetry export -E electra --without-hashes --without-urls | sed "s/ ;.*//" > requirements-electra.txt
+```
 
 ### GPU
 
@@ -210,6 +216,11 @@ poetry shell
 
 脱出方法は`deactivate`（またはControl+d）。
 
+##### PDM
+
+[PDM](https://pdm.fming.dev/latest/)はPythonの最新スタンダード（PEP 582, 517, 621）に従い，プロジェクト管理を可能にする。
+PDMを使う場合は，`pyproject.toml`の`build-tools`のセクションをPoetryのものと入れ替えることが必要である。
+
 #### conda
 
 conda (Anaconda)では付属の`environment.yml`の定義を読み，`ginza`という仮想環境にインストールする：
@@ -233,25 +244,6 @@ conda activate ginza
 conda update conda
 conda install anaconda=2021.05
 ```
-
-#### pipenv
-
-[Pipenv](https://github.com/pypa/pipenv)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`Pipfile`で記述されている。
-Pipenvを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
-
-```bash
-pipenv lock
-```
-
-上記により`Pipenv.lock`というファイルが作成される。中身は`Pipenv`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
-
-実際仮想環境を使う場合は仮想環境の有効化が必要になる。
-
-```bash
-pipenv shell
-```
-
-脱出方法は`exit`（またはControl+d）。
 
 ## モデルの使用（Pythonコードから）
 
