@@ -1,0 +1,12 @@
+cupy-wheel==11.2.0
+datasets==2.6.1
+ginza==5.1.2
+huggingface-hub==0.10.1
+ja-ginza==5.1.2
+spacy-legacy==3.0.10
+spacy-loggers==1.0.3
+spacy==3.4.2
+sudachidict-core==20221021
+sudachipy==0.6.6
+thinc==8.1.5
+tqdm==4.64.1

@@ -110,6 +110,27 @@ Svelteの使用にはnodejsの環境整備が必要になる。
 
 インストールは2022年10月時点で，poetryを使用することをおすすめするが，以下は標準のPython/pipによるインストール方法を紹介する。
 
+Python以外にもPandocなど外部プログラムも使用しているので，下記OS別にインストール基準も書いている。
+
+### OS
+
+#### macOS
+
+```bash
+brew install pandoc
+```
+
+#### Linux
+
+パッケージマネージャで`pandoc`をインストールする。
+バージョン1ではなく2系が必要になる。
+
+#### Windows
+
+```powershell
+winget install pandoc
+```
+
 ### pip
 
 必要なPythonのパッケージは`requirements.txt`に記載されている。
