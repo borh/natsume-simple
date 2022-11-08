@@ -52,8 +52,7 @@ git clone https://github.com/borh/natsume-simple.git
 ```
 .
 ├── data                         # データ
-│   ├── jnlp-sample-3000.txt
-│   ├── NLP_LATEX_CORPUS
+│   ├── jnlp-sample-3000.txt     # scripts実行後にできるコーパスファイル
 │   └── ted_corpus.txt
 ├── environment.yml              # conda仮想環境用
 ├── notebooks                    # ノートブック
@@ -63,6 +62,8 @@ git clone https://github.com/borh/natsume-simple.git
 ├── pyproject.toml               # poetry仮想環境用
 ├── README.md                    # このファイル
 ├── requirements.txt             # デフォルトの依存ペッケージ定義
+├── requirements-electra.txt     # Electraモデル／GPU使用時の依存ペッケージ定義
+├── requirements-colab.txt       # Google Colab用の依存ペッケージ定義
 ├── scripts                      # スクリプト（データ入手用）
 │   ├── convert-jnlp-corpus.sh   # 自然言語処理コーパスの作成
 │   └── get-jnlp-corpus.sh       # 自然言語処理コーパスのダウンロード
