@@ -4,6 +4,40 @@
 
 natsume-simpleは日本語の係り受け関係を検索できるシステム
 
+## 利用法
+
+本プロジェクトを動かすにはソースコードをパソコンにダウンロードする必要がある。
+GitHub上からは，ZIP圧縮ファイルでのダウンロードか，Gitでのクローンか，で利用できる。
+
+ソースコードの最新版が入っているZIPファイルのダウンロードは，[ここ](https://github.com/borh/natsume-simple/archive/refs/heads/main.zip)からできる。
+Git利用には事前にインストール必要がある。
+
+コマンドライン以外でもインストール可能であるが，以下はそれぞれのOSのコマンドラインインターフェースを利用したインストール方法：
+
+-   Linux (Debian/Ubuntuの場合):
+
+```bash
+sudo apt get install git
+```
+
+-   macOS:
+
+```zsh
+brew install git
+```
+
+-   Windows (最新版でないと[Wingetの設定](https://learn.microsoft.com/ja-jp/windows/package-manager/winget/)が必要):
+
+```powershell
+winget install -e Git.Git
+```
+
+それで`git`での入手方法は：
+
+```bash
+git clone https://github.com/borh/natsume-simple.git
+```
+
 ## 機能
 
 - 特定の係り受け関係（名詞ー格助詞ー動詞，名詞ー格助詞ー形容詞など）における格助詞の左右にある語から検索できる
