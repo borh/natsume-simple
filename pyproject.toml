@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "simple dependency relation search engine for Japanese"
 authors = [{ name = "Bor Hodošček", email = "<dev@bor.space>" }]
 license = "MIT"
-
+# Above and below correspond to PDM and Poetry configs, respectively.
 [tool.poetry]
 name = "natsume-simple"
 version = "0.1.0"
@@ -14,22 +14,32 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
-# We keep GiNZA pinned to have reproducible results
-ginza = "5.1.2"
-ja_ginza = "5.1.2"
-
-ja_ginza_electra = { version = "5.1.2", optional = true }
-torch = { version = "^1.13.0", optional = true }
-spacy = { version = "^3.4.2", extras = ["cuda-autodetect"], optional = true }
-cupy-cuda11x = { version = "^11.2.0", optional = true }
 
 numpy = { version = "^1.23.4", python = ">=3.8,<4.0" }
 datasets = "~2.6.1"
 fastapi = "^0.86.0"
 uvicorn = { version = "^0.19.0", extras = ["standard"] }
 
+# We keep GiNZA pinned to have reproducible results
+ginza = "5.1.2"
+ja_ginza = "5.1.2"
+
+# Transformers-based models (electra -E flag):
+ja_ginza_electra = { version = "5.1.2", optional = true }
+torch = { version = "^1.13.0", optional = true }
+spacy = { version = "^3.4.2", extras = ["cuda-autodetect"], optional = true }
+
+# CUDA (cuda -E flag):
+cupy-cuda11x = { version = "^11.2.0", optional = true }
+
+# ROCm (rocm -E flag)
+# Currently not working
+# torch-rocm = { optional = true, url = "https://download.pytorch.org/whl/rocm5.2/torch-1.13.0%2Brocm5.2-cp310-cp310-linux_x86_64.whl" }
+
 [tool.poetry.extras]
-electra = ["ja_ginza_electra", "torch", "spacy", "cupy-cuda11x"]
+electra = ["ja_ginza_electra", "torch", "spacy"]
+cuda = ["cupy-cuda11x"]
+# rocm = ["torch-rocm"]
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = { version = "^6.17.0", python = ">=3.8,<3.12" }
@@ -38,7 +48,7 @@ ipywidgets = "^8.0.2"
 pytest = "^7.2.0"
 pytest-watch = "^4.2.0"
 pytest-testmon = { version = "^1.4.1", python = ">=3.8,<3.12" }
-hypothesis = "^6.56.4"
+hypothesis = "^6.56.4" # pytest dependency
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -49,6 +59,7 @@ testpaths = ["tests", "integration"]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+# Uncomment below to use PDM:
 # [build-system]
 # requires = ["pdm-pep517>=1.0.0"]
 # build-backend = "pdm.pep517.api"
