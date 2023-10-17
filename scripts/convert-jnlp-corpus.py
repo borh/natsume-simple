@@ -42,12 +42,14 @@ def main(corpus_dir=Path("../data/NLP_LATEX_CORPUS")):
     with open("../data/jnlp-sample-3000-python.txt", "w", encoding="utf-8") as f:
         f.writelines(lines[:3000])
 
+
 # 以下のBashでの処理をPythonで実装：
 # awkで200字未満のパラグラフを除外し，grepで英文字3字以上の文を除外し，3000パラグラフを無作為抽出し，ファイルに出力
 # cat $CORPUS_DIR/*/*.txt | awk 'length($0)>200' | grep -vP "[a-z]{2,}|-{2,}|\||[\d\.]{4,}" | shuf -n 3000 > $CORPUS_DIR/../jnlp-sample-3000.txt
 # --random-source=<(yes 42)指定で再現可能にする
 
-random.seed(42) # Set random seed for reproducible results
+random.seed(42)  # Set random seed for reproducible results
+
 
 def filter_non_japanese(dir):
     files = dir.rglob("*.txt")

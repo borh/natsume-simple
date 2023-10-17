@@ -1,5 +1,6 @@
 import spacy
 
+
 def test_model_loading():
     try:
         nlp = spacy.load("ja_ginza_electra")

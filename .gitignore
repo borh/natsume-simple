@@ -279,3 +279,14 @@ package
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,jetbrains+all,svelte
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
