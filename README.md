@@ -259,9 +259,11 @@ Poetryを使う場合は下記コマンドで仮想環境作成，使用ペッ�
 ```bash
 poetry install
 ```
-あるいはja_ginza_electraモデル使用時：
+
+あるいはNVIDIAのGPU搭載時：
+
 ```bash
-poetry install -E electra
+poetry install -E cuda
 ```
 
 上記により`poetry.lock`というファイルが作成される。中身は`pyproject.toml`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
@@ -279,16 +281,16 @@ PDMを使う場合は，`pyproject.toml`の`build-tools`のセクションをPoe
 
 #### conda
 
-conda (Anaconda)では付属の`environment.yml`の定義を読み，`ginza`という仮想環境にインストールする：
+conda (Anaconda)では付属の`environment.yml`の定義を読み，`natsume-simple`という仮想環境にインストールする：
 
 ```bash
-conda env create -n ginza -f environment.yml
+conda env create -n natsume-simple -f environment.yml
 ```
 
 インストール後は以下のコマンドで仮想環境を有効にできる：
 
 ```bash
-conda activate ginza
+conda activate natsume-simple
 ```
 
 仮想環境から脱出したいときは`conda deactivate`でできる。
@@ -308,7 +310,7 @@ conda install anaconda=2021.05
 
 ```python
 import spacy
-nlp = spacy.load('ja_ginza_electra')
+nlp = spacy.load('ja_ginza_bert_large')
 ```
 
 あるいは
@@ -318,7 +320,7 @@ import spacy
 nlp = spacy.load('ja_ginza')
 ```
 
-ノートブックでは，優先的に`ja_ginza_electra`を使用する。
+ノートブックでは，優先的に`ja_ginza_bert_large`を使用するが，インストールされていない場合は`ja_ginza`を使用する。
 
 ## データ・コーパスの生成スクリプト
 
