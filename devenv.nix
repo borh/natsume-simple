@@ -16,7 +16,12 @@ let
     paths = with pkgs.cudaPackages_12_2; [
       cuda_cudart # cuda_runtime.h cuda_runtime_api.h
       cuda_nvcc
+      cuda_nvtx
+      cuda_cupti
+      cuda_nvrtc
+      libcusolver
       nccl
+      pkgs.linuxPackages_latest.nvidia_x11
     ] ++ cuda-common-redist;
   };
 
@@ -29,7 +34,7 @@ in
   # https://devenv.sh/basics/
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.stdenv.cc.cc ] ++ lib.optionals cudaSupport [ cuda-native-redist ];
+  packages = [ pkgs.stdenv.cc.cc pkgs.zlib ] ++ lib.optionals cudaSupport [ cuda-native-redist ];
 
   # https://devenv.sh/scripts/
 
@@ -47,12 +52,13 @@ in
   };
 
   # https://devenv.sh/pre-commit-hooks/
-  # pre-commit.hooks.shellcheck.enable = true;
+  pre-commit.hooks.shellcheck.enable = true;
+  pre-commit.hooks.black.enable = true;
 
   # https://devenv.sh/processes/
   # processes.ping.exec = "ping example.com";
 
-  scripts.export-pip.exec = "poetry export -f requirements.txt --output requirements.txt; poetry export --extras cuda -f requirements.txt --output requirements-cuda.txt";
+  scripts.export-pip.exec = "poetry export -f requirements.txt | sed \"s/ ;.*//\" > requirements.txt; poetry export --extras cuda -f requirements.txt --output requirements-cuda.txt";
 
   env.LD_LD_LIBRARY_PATH = lib.makeLibraryPath [ cuda-redist ];
   env.CUDNN_HOME = "" + lib.optionals cudaSupport cuda-redist;

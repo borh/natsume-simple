@@ -31,7 +31,7 @@ torch = { version = "^2.1.0", optional = true }
 spacy = { version = "^3.6.1", optional = true }
 
 # # CUDA (cuda -E flag):
-cupy-cuda12x = { version = "^12.2.0", optional = true }
+# cupy-cuda12x = { version = "^12.2.0", optional = true }
 
 # ROCm (rocm -E flag)
 # Currently not working
