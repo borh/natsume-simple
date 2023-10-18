@@ -42,7 +42,7 @@ spacy = { version = "^3.6.1", optional = true }
 [tool.poetry.extras]
 # electra = ["ja_ginza_electra", "torch", "spacy"]
 cuda = ["cupy-cuda12x", "torch", "spacy"]
-# rocm = ["torch-rocm"]
+rocm = ["cupy-rocm-5-0", "torch", "spacy"]
 
 [[tool.poetry.source]]
 name = "pytorch-cpu"
