@@ -3,11 +3,11 @@
 CORPUS_DIR=../data/NLP_LATEX_CORPUS
 
 # In order to force a reconversion of an existing plaintext file (because of improvements in Pandoc, etc.), you need to delete the generated plaintext file.
-find $CORPUS_DIR -name "*.tex" -print0 | while read -d $'\0' latex_file
+find $CORPUS_DIR -name "*.tex" -print0 | while read -r -d $'\0' latex_file
 do
 	output_file=${latex_file/.tex/.txt}
-	if [ ! -f $output_file ]; then 
-		pandoc --quiet -f latex+east_asian_line_breaks -t plain --wrap=none --strip-comments -N -s $latex_file -o $output_file
+	if [ ! -f "$output_file" ]; then 
+		pandoc --quiet -f latex+east_asian_line_breaks -t plain --wrap=none --strip-comments -N -s "$latex_file" -o "$output_file"
 	fi
 done
 
