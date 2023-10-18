@@ -4,7 +4,7 @@
 
 natsume-simpleは日本語の係り受け関係を検索できるシステム
 
-## 利用法
+## 開発用インストール手順
 
 本プロジェクトを動かすにはソースコードをパソコンにダウンロードする必要がある。
 GitHub上からは，ZIP圧縮ファイルでのダウンロードか，Gitでのクローンか，で利用できる。
@@ -36,6 +36,169 @@ winget install -e Git.Git
 
 ```bash
 git clone https://github.com/borh/natsume-simple.git
+```
+
+インストールは2022年10月時点で，poetryを使用することをおすすめするが，以下は標準のPython/pipによるインストール方法を紹介する。
+
+Python以外にもPandocなど外部プログラムも使用しているので，下記OS別にインストール基準も書いている。
+
+### OS別手順
+
+#### macOS
+
+```bash
+brew install pandoc
+```
+
+#### Linux
+
+パッケージマネージャで`pandoc`をインストールする。
+バージョン1ではなく2系が必要になる。
+
+#### Windows
+
+```powershell
+winget install pandoc
+```
+
+### pip
+
+必要なPythonのパッケージは`requirements.txt`に記載されている。
+以下のコマンドでは，現在のPython環境に必要パッケージがインストールし始める。
+他のPythonプログラム・環境と干渉しないためには，仮想環境の利用をおすすめする。
+
+```bash
+pip install -r requirements.txt
+```
+
+メモリ・容量に余裕があれば，より精度の高い言語モデル ja-ginza-electra を下記で入れ替えられる：
+
+```bash
+pip install ja_ginza_electra
+```
+
+GPUがあれば，上記の`requirements.txt`の代わりに以下のコマンドで一括インストールできる：
+
+```bash
+pip install -r requirements-electra.txt
+```
+
+`requirements.txt`及び`requirements-electra.txt`はPoetryで自動生成される。
+Google Colabとの相互性を保つために，ややゆるいバージョン指定をしている（Pythonが3.7のため）。
+
+```bash
+poetry export --without-hashes --without-urls | sed "s/ ;.*//" > requirements.txt
+poetry export -E electra --without-hashes --without-urls | sed "s/ ;.*//" > requirements-electra.txt
+```
+
+### GPU
+
+GPUの利用には，OSでの適切なドライバとCuDNNなどのペッケージのインスールの他，GPU対応のspaCyやPyTorchのインストールも必要になる。
+
+例えば，CUDA使用時はGPU対応の[PyTorch](https://pytorch.org/get-started/locally/)（Transformersパッケージで使用）と[CuPY](https://docs.cupy.dev/en/stable/install.html)（spaCyパッケージで使用）をインストールする。
+
+
+PyTorch ([https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)):
+
+```
+pip install torch
+```
+
+spaCy ([https://spacy.io/usage](https://spacy.io/usage)):
+
+```
+pip install -U 'spacy[cuda-autodetect]'
+```
+あるいは
+```
+pip install cupy-cuda12x
+```
+
+### 問題対策
+
+まず，現在利用しているPythonのバージョン・場所を確認する：
+
+```bash
+which python
+```
+
+```bash
+python -V
+```
+
+Pythonは従来バージョン2と3にわかれていて，OSとそのバージョンによってpythonを実行時，どちらか一方のバージョンを指す。
+間違いなくPython 3を使いたい場合は，python3, pip3の通り，末尾に3をつける。
+現在ではPython 2を使う場面がほとんどないが，同じくpython2で指定することができる。
+また，将来的にはPython 2がインストールされず，pythonが常に3を指すことになる。
+
+### virtualenv仮想環境
+
+上記pipインストールで問題が発生すると，使用するPythonが3.8かそれより最新のものであることを確認するとよい。
+また，他のパッケージとの干渉を除外するために[簡単な仮想環境](https://xkcd.com/1987/)を作る方法がある。
+Python内蔵の仮想環境を作成する場合は[ここ](https://docs.python.org/ja/3/tutorial/venv.html)を参照。
+
+上記の手動の仮想環境作成以外にも，poetry, pipenv, condaの環境・システムがある。
+2022年10月時点では，poetryとその`pyproject.toml`の定義ファイルが人気であろう。
+Anacondaも総括的な環境提供という点で人気である。
+
+#### poetry
+
+[Poetry](https://python-poetry.org/)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`pyproject.toml`で記述されている。
+
+VS Codeなど一部エディターではプロジェクト内のフォルダ以外に仮想環境を見つけ出せないために，仮想環境を作る前に以下のコマンドでPoetry使用時にフォルダ内に作る設定にする。
+
+```bash
+poetry config virtualenvs.in-project true
+```
+
+Poetryを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
+
+```bash
+poetry install
+```
+
+あるいはNVIDIAのGPU搭載時：
+
+```bash
+poetry install -E cuda
+```
+
+上記により`poetry.lock`というファイルが作成される。中身は`pyproject.toml`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
+
+```bash
+poetry shell
+```
+
+脱出方法は`deactivate`（またはControl+d）。
+
+##### PDM
+
+[PDM](https://pdm.fming.dev/latest/)はPythonの最新スタンダード（PEP 582, 517, 621）に従い，プロジェクト管理を可能にする。
+PDMを使う場合は，`pyproject.toml`の`build-tools`のセクションをPoetryのものと入れ替えることが必要である。
+
+#### conda
+
+conda (Anaconda)で`natsume-simple`という仮想環境にインストールする：
+
+```bash
+conda env create -n natsume-simple
+```
+
+インストール後は以下のコマンドで仮想環境を有効にできる：
+
+```bash
+conda activate natsume-simple
+pip install -r requirements.txt
+```
+
+仮想環境から脱出したいときは`conda deactivate`でできる。
+
+動作確認はAnacondaの2021.05で行われたが，最新のバージョンの使用をおすすめする。
+同じ環境を作る場合は以下のコマンドでできる：
+
+```bash
+conda update conda
+conda install anaconda=2021.05
 ```
 
 ## 機能
@@ -140,168 +303,6 @@ Svelteの使用にはnodejsの環境整備が必要になる。
 
 サーバ読む静的ファイルを含むファルダ。
 ここに置かれるものは基本的にAPIの`static/`URL下で同一ファイル名でアクセス可能。
-
-## インストール
-
-インストールは2022年10月時点で，poetryを使用することをおすすめするが，以下は標準のPython/pipによるインストール方法を紹介する。
-
-Python以外にもPandocなど外部プログラムも使用しているので，下記OS別にインストール基準も書いている。
-
-### OS
-
-#### macOS
-
-```bash
-brew install pandoc
-```
-
-#### Linux
-
-パッケージマネージャで`pandoc`をインストールする。
-バージョン1ではなく2系が必要になる。
-
-#### Windows
-
-```powershell
-winget install pandoc
-```
-
-### pip
-
-必要なPythonのパッケージは`requirements.txt`に記載されている。
-以下のコマンドでは，現在のPython環境に必要パッケージがインストールし始める。
-他のPythonプログラム・環境と干渉しないためには，仮想環境の利用をおすすめする。
-
-```bash
-pip install -r requirements.txt
-```
-
-メモリ・容量に余裕があれば，より精度の高い言語モデル ja-ginza-electra を下記で入れ替えられる：
-
-```bash
-pip install ja_ginza_electra
-```
-
-GPUがあれば，上記の`requirements.txt`の代わりに以下のコマンドで一括インストールできる：
-
-```bash
-pip install -r requirements-electra.txt
-```
-
-`requirements.txt`及び`requirements-electra.txt`はPoetryで自動生成される。
-Google Colabとの相互性を保つために，ややゆるいバージョン指定をしている（Pythonが3.7のため）。
-
-```bash
-poetry export --without-hashes --without-urls | sed "s/ ;.*//" > requirements.txt
-poetry export -E electra --without-hashes --without-urls | sed "s/ ;.*//" > requirements-electra.txt
-```
-
-### GPU
-
-GPUの利用には，OSでの適切なドライバとCuDNNなどのペッケージのインスールの他，GPU対応のspaCyやPyTorchのインストールも必要になる。
-
-例えば，CUDA使用時は以下でGPU対応の[PyTorch](https://pytorch.org/)（Transformersパッケージで使用）と[CuPY](https://docs.cupy.dev/en/stable/install.html)（spaCyパッケージで使用）のインストールができる。
-
-
-PyTorch:
-
-```
-pip install torch --extra-index-url https://download.pytorch.org/whl/cu116
-```
-
-
-spaCy:
-
-```
-pip install -U 'spacy[cuda-autodetect]'
-```
-あるいは
-```
-pip install cupy-cuda11x
-```
-
-<!-- M1+ support should be better when PyTorch 1.13 is released: https://github.com/explosion/thinc/issues/792 -->
-
-PyTorchはja_ginza_electraモデル使用時に必要となるが，ja_ginzaでもGPU使用時CPUより高速になる。
-
-### 問題対策
-
-まず，現在利用しているPythonのバージョン・場所を確認する：
-
-```bash
-which python
-```
-
-```bash
-python -V
-```
-
-Pythonは従来バージョン2と3にわかれていて，OSとそのバージョンによってpythonを実行時，どちらか一方のバージョンを指す。
-間違いなくPython 3を使いたい場合は，python3, pip3の通り，末尾に3をつける。
-現在ではPython 2を使う場面がほとんどないが，同じくpython2で指定することができる。
-また，将来的にはPython 2がインストールされず，pythonが常に3を指すことになる。
-
-### virtualenv仮想環境
-
-上記pipインストールで問題が発生すると，使用するPythonが3.8かそれより最新のものであることを確認するとよい。
-また，他のパッケージとの干渉を除外するために[簡単な仮想環境](https://xkcd.com/1987/)を作る方法がある。
-Python内蔵の仮想環境を作成する場合は[ここ](https://docs.python.org/ja/3/tutorial/venv.html)を参照。
-
-上記の手動の仮想環境作成以外にも，poetry, pipenv, condaの環境・システムがある。
-2022年10月時点では，poetryとその`pyproject.toml`の定義ファイルが人気であろう。
-Anacondaも総括的な環境提供という点で人気である。
-
-#### poetry
-
-[Poetry](https://python-poetry.org/)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`pyproject.toml`で記述されている。
-Poetryを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
-
-```bash
-poetry install
-```
-
-あるいはNVIDIAのGPU搭載時：
-
-```bash
-poetry install -E cuda
-```
-
-上記により`poetry.lock`というファイルが作成される。中身は`pyproject.toml`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
-
-```bash
-poetry shell
-```
-
-脱出方法は`deactivate`（またはControl+d）。
-
-##### PDM
-
-[PDM](https://pdm.fming.dev/latest/)はPythonの最新スタンダード（PEP 582, 517, 621）に従い，プロジェクト管理を可能にする。
-PDMを使う場合は，`pyproject.toml`の`build-tools`のセクションをPoetryのものと入れ替えることが必要である。
-
-#### conda
-
-conda (Anaconda)では付属の`environment.yml`の定義を読み，`natsume-simple`という仮想環境にインストールする：
-
-```bash
-conda env create -n natsume-simple -f environment.yml
-```
-
-インストール後は以下のコマンドで仮想環境を有効にできる：
-
-```bash
-conda activate natsume-simple
-```
-
-仮想環境から脱出したいときは`conda deactivate`でできる。
-
-動作確認はAnacondaの2021.05で行われたが，最新のバージョンの使用をおすすめする。
-同じ環境を作る場合は以下のコマンドでできる：
-
-```bash
-conda update conda
-conda install anaconda=2021.05
-```
 
 ## モデルの使用（Pythonコードから）
 
