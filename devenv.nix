@@ -58,7 +58,7 @@ in
   # https://devenv.sh/processes/
   # processes.ping.exec = "ping example.com";
 
-  scripts.export-pip.exec = "poetry export -f requirements.txt | sed \"s/ ;.*//\" > requirements.txt; poetry export --extras cuda -f requirements.txt --output requirements-cuda.txt";
+  scripts.export-pip.exec = "poetry export -f requirements.txt | sed \"s/ ;.*//\" > requirements.txt; poetry export --extras cuda -f requirements.txt | sed \"s/ ;.*//\" > requirements-cuda.txt";
 
   env.LD_LD_LIBRARY_PATH = lib.makeLibraryPath [ cuda-redist ];
   env.CUDNN_HOME = "" + lib.optionals cudaSupport cuda-redist;
