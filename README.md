@@ -184,24 +184,25 @@ PDMを使う場合は，`pyproject.toml`の`build-tools`のセクションをPoe
 conda (Anaconda)で`natsume-simple`という仮想環境にインストールする：
 
 ```bash
-conda env create -n natsume-simple
+conda env create -n natsume-simple -f environment.yml
 ```
 
 インストール後は以下のコマンドで仮想環境を有効にできる：
 
 ```bash
 conda activate natsume-simple
-pip install -r requirements.txt
 ```
+
+必要な場合はGPUサポート用のrequirements-*も参照してインストールして下さい。
 
 仮想環境から脱出したいときは`conda deactivate`でできる。
 
-動作確認はAnacondaの2021.05で行われたが，最新のバージョンの使用をおすすめする。
+動作確認はAnacondaの2023.09で行われたが，最新のバージョンの使用をおすすめする。
 同じ環境を作る場合は以下のコマンドでできる：
 
 ```bash
 conda update conda
-conda install anaconda=2021.05
+conda install anaconda=2023.0]
 ```
 
 ## 機能
