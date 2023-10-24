@@ -4,7 +4,7 @@
 
 natsume-simpleは日本語の係り受け関係を検索できるシステム
 
-## 開発用インストール手順
+## 開発用OSインストール手順
 
 本プロジェクトを動かすにはソースコードをパソコンにダウンロードする必要がある。
 GitHub上からは，ZIP圧縮ファイルでのダウンロードか，Gitでのクローンか，で利用できる。
@@ -53,13 +53,17 @@ brew install pandoc
 #### Linux
 
 パッケージマネージャで`pandoc`をインストールする。
-バージョン1ではなく2系が必要になる。
+バージョン1ではなく2もしくは3系が必要になる。
 
 #### Windows
 
 ```powershell
 winget install pandoc
 ```
+
+## Python環境のインストール
+
+natsume-simpleはPoetryを使用しているが，pip/condaの場合も可能である。
 
 ### pip
 
@@ -71,27 +75,17 @@ winget install pandoc
 pip install -r requirements.txt
 ```
 
-メモリ・容量に余裕があれば，より精度の高い言語モデル ja-ginza-electra を下記で入れ替えられる：
-
-```bash
-pip install ja_ginza_electra
-```
-
 GPUがあれば，上記の`requirements.txt`の代わりに以下のコマンドで一括インストールできる：
 
 ```bash
-pip install -r requirements-electra.txt
+pip install -r requirements-cuda.txt
 ```
 
-`requirements.txt`及び`requirements-electra.txt`はPoetryで自動生成される。
-Google Colabとの相互性を保つために，ややゆるいバージョン指定をしている（Pythonが3.7のため）。
-
-```bash
-poetry export --without-hashes --without-urls | sed "s/ ;.*//" > requirements.txt
-poetry export -E electra --without-hashes --without-urls | sed "s/ ;.*//" > requirements-electra.txt
-```
+`requirements.txt`, `requirements-apple-silicon.txt`及び`requirements-cuda.txt`はPoetryから自動生成される。
 
 ### GPU
+
+#### CUDA/ROCM (Linux/Windows)
 
 GPUの利用には，OSでの適切なドライバとCuDNNなどのペッケージのインスールの他，GPU対応のspaCyやPyTorchのインストールも必要になる。
 
@@ -112,6 +106,15 @@ pip install -U 'spacy[cuda-autodetect]'
 あるいは
 ```
 pip install cupy-cuda12x
+```
+
+#### Apple Silicon (macOS)
+
+spaCyは[thinc](https://github.com/explosion/thinc/issues/792)というライブラリを使用しているので，PyTorch以外，thincの正しいバージョンをインストールする必要がある。
+下記の`requirements-apple-silicon.txt`ですべて記載されているので，インストールするとGPUが使用できるはずである。確認方法は[ここ](https://support.apple.com/guide/activity-monitor/view-gpu-activity-actm9329b315/mac)にある。
+
+```bash
+pip install -r requirements-apple-silicon.txt
 ```
 
 ### 問題対策
