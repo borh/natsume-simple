@@ -101,7 +101,11 @@ lib.attrsets.recursiveUpdate
   # https://devenv.sh/processes/
   # processes.ping.exec = "ping example.com";
 
-  scripts.export-pip.exec = "poetry export -f requirements.txt | sed \"s/ ;.*//\" > requirements.txt; poetry export --extras cuda -f requirements.txt | sed \"s/ ;.*//\" > requirements-cuda.txt";
+  scripts.export-pip.exec = ''
+    poetry export -f requirements.txt | sed "s/ ;.*//" | grep -v "\-\-hash=sha256" > requirements.txt
+    poetry export --extras cuda -f requirements.txt | sed "s/ ;.*//" | grep -v "\-\-hash=sha256" > requirements-cuda.txt; echo "cupy-cuda12x" >> requirements-cuda.txt
+    cat requirements.txt | grep -v spacy > requirements-apple-silicon.txt; echo "spacy[apple]" >> requirements-apple-silicon.txt
+  '';
 
   # See full reference at https://devenv.sh/reference/options/
 } # recursiveUpdate:
