@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 let
-  cudaSupport = false;
+  cudaSupport = true;
   cudaVersion = "12.2";
   cuda-common-redist = with pkgs.cudaPackages_12_2; [
     cuda_cccl # cub/cub.cuh
@@ -28,7 +28,7 @@ let
     paths = cuda-common-redist;
   };
 
-  rocmSupport = true;
+  rocmSupport = false;
   rocmtoolkit_joined = pkgs.symlinkJoin {
     name = "rocm-merged";
     paths = with pkgs.rocmPackages; [
