@@ -25,7 +25,7 @@ let
   };
   cuda-redist = pkgs.symlinkJoin {
     name = "cuda-redist-${cudaVersion}";
-    paths = cuda-common-redist;
+    paths = cuda-native-redist;
   };
 
   rocmSupport = false;
