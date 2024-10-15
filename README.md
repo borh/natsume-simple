@@ -63,8 +63,13 @@ winget install pandoc
 
 ## Python環境のインストール
 
-natsume-simpleはPoetryを使用しているが，pip/condaの場合も可能である。
+natsume-simpleは[uv](https://docs.astral.sh/uv)を使用しているが，pip/condaの場合も可能である。
 
+```bash
+uv sync
+```
+
+<!--
 ### pip
 
 必要なPythonのパッケージは`requirements.txt`に記載されている。
@@ -204,6 +209,7 @@ conda activate natsume-simple
 conda update conda
 conda install anaconda=2023.0]
 ```
+-->
 
 ## 機能
 
@@ -269,6 +275,17 @@ jupyter lab
 
 ```bash
 python -m ipykernel install --user --name=$(basename $VIRTUAL_ENV)
+```
+
+### CLI
+
+```bash
+uv run python src/natsume_simple/data.py --prepare
+```
+
+```bash
+uv run python src/natsume_simple/pattern-extraction.py --corpus-name 自然言語処理 data/jnlp-corpus.txt data/jnlp-npvs.csv
+uv run python src/natsume_simple/pattern-extraction.py --corpus-name TED data/ted-corpus.txt data/ted-npvs.csv
 ```
 
 ### scripts
