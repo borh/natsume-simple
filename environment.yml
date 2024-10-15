@@ -1,9 +1,0 @@
-name: natsume-simple
-channels:
-  - defaults
-dependencies:
-  - numpy
-  - pandas
-  - pip
-  - pip:
-    - -r requirements.txt
