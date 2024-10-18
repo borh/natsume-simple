@@ -30,6 +30,19 @@ dev-dependencies = [
     "pytest>=8.3.3",
 ]
 
+# TODO
+# https://docs.astral.sh/uv/configuration/indexes/
+# [tool.uv.sources]
+# torch = [
+#   { index = "cpu", markers = "sys_platform == 'darwin'" },
+#   { index = "gpu", markers = "sys_platform != 'darwin'" },
+# ]
+#
+# [[tool.uv.index]]
+# name = "pytorch"
+# url = "https://download.pytorch.org/whl/cu124"
+# default = true
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q"
