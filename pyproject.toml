@@ -7,9 +7,8 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "cupy-cuda12x>=13.3.0",
     "datasets>=3.0.1",
-    "fastapi>=0.115.0",
+    "fastapi[standard]>=0.115.0",
     "ginza>=5.2.0",
     "ja-ginza>=5.2.0",
     # blocked on thinc (spaCy):
@@ -17,9 +16,14 @@ dependencies = [
     "polars>=1.9.0",
     "spacy>=3.7.5",
     # "spacy-transformers>=1.2.5",
-    "torch>=2.4.1",
+    # "torch>=2.4.1",
     "uvicorn>=0.31.0",
 ]
+
+[project.optional-dependencies]
+cuda = ["cupy-cuda12x>=13.3.0"]
+rocm = ["torch==2.5.0+rocm6.2", "pytorch_triton_rocm==3.1.0", "cupy-rocm-5-0"]
+apple = []
 
 [tool.uv]
 dev-dependencies = [
@@ -32,16 +36,19 @@ dev-dependencies = [
 
 # TODO
 # https://docs.astral.sh/uv/configuration/indexes/
-# [tool.uv.sources]
+[tool.uv.sources]
+torch = { index = "pytorch-rocm" }
+pytorch-triton-rocm = { index = "pytorch-rocm" }
 # torch = [
 #   { index = "cpu", markers = "sys_platform == 'darwin'" },
 #   { index = "gpu", markers = "sys_platform != 'darwin'" },
 # ]
-#
-# [[tool.uv.index]]
-# name = "pytorch"
-# url = "https://download.pytorch.org/whl/cu124"
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm6.2"
 # default = true
+explicit = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
