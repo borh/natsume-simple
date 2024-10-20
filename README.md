@@ -288,7 +288,9 @@ uv run python src/natsume_simple/pattern-extraction.py --corpus-name 自然言�
 uv run python src/natsume_simple/pattern-extraction.py --corpus-name TED data/ted-corpus.txt data/ted-npvs.csv
 ```
 
-### scripts
+### scripts (deprecated)
+
+（上記の`data.py`に移行してあるのここは参考まで）
 
 定めた手順で，コーパスの前処理・データ整理などを行う。
 ここでは，Hugginface Datasets以外のコーパスを扱う。
@@ -356,15 +358,14 @@ nlp = spacy.load('ja_ginza')
 
 ## サーバの起動
 
-（仮想環境を使う場合はまず有効にしてからサーバを立ち上げる）
 
 ```bash
-uvicorn server:app --reload
+uv run fastapi dev src/natsume_simple/server.py
 ```
 
-上記コマンドでは，server.pyをUnicornというウエブサーバで起動し，ブラウザからアクセス可能にする。
+上記コマンドでは，server.pyをFastAPIでウエブサーバで起動し，ブラウザからアクセス可能にする。
 
 `server.py`では，モデルの指定があるのでご注意。
 
-サーバを起動後は，出力される手順に従い，<http://127.0.0.1:8000/app/>にアクセスする。
+サーバを起動後は，出力される手順に従い，<http://127.0.0.1:8000/>にアクセスする。
 FastAPIによるドキュメンテーションは<http://127.0.0.1:8000/docs>にある。
