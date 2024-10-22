@@ -66,7 +66,7 @@ winget install pandoc
 natsume-simpleは[uv](https://docs.astral.sh/uv)を使用しているが，pip/condaの場合も可能である。
 
 ```bash
-uv sync
+uv sync --extra backend
 ```
 
 <!--
@@ -322,10 +322,13 @@ npm run build
 
 Svelteの使用にはnodejsの環境整備が必要になる。
 
+<!--
 ### static
 
 サーバ読む静的ファイルを含むファルダ。
 ここに置かれるものは基本的にAPIの`static/`URL下で同一ファイル名でアクセス可能。
+
+-->
 
 ## モデルの使用（Pythonコードから）
 
@@ -369,3 +372,4 @@ uv run fastapi dev src/natsume_simple/server.py
 
 サーバを起動後は，出力される手順に従い，<http://127.0.0.1:8000/>にアクセスする。
 FastAPIによるドキュメンテーションは<http://127.0.0.1:8000/docs>にある。
+（環境によっては<http://0.0.0.0:8000>が<http://127.0.0.1:8000>と同様ではない）
