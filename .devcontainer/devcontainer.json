@@ -1,0 +1,29 @@
+{
+    "name": "NixOS + devenv",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        "--init"
+    ],
+    "customizations": {
+        "vscode": {
+            // Set *default* container specific settings.json values on container create.
+            "settings": {},
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "ms-python.python",
+                "svelte.svelte-vscode",
+                "oven.bun-vscode",
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "bradlc.vscode-tailwindcss",
+                "svelte.svelte-vscode",
+                "eamodio.gitlens",
+                "editorconfig.editorconfig",
+                "antfu.iconify",
+                "hyoban.tailwindcss-classname-highlight"
+            ]
+        }
+    }
+}
