@@ -5,4 +5,4 @@ RUN nix-channel --update
 
 RUN nix-env -i git zsh cachix wget
 
-RUN nix --experimental-features "nix-command flakes" develop --command true
+# RUN nix --experimental-features "nix-command flakes" develop --command true
