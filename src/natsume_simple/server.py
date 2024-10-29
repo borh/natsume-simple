@@ -1,9 +1,25 @@
+# /// script
+# dependencies = [
+#   "fastapi",
+#   "polars",
+# ]
+# ///
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import polars as pl
 from typing import Dict, List, Any
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change this to specific origins in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def load_database(model_name: str) -> pl.DataFrame:
@@ -37,9 +53,4 @@ def read_npv(noun: str) -> List[Dict[str, Any]]:
     return matches
 
 
-# app.mount(
-#    "/static",
-#    StaticFiles(directory="natsume-frontend/static", html=True),
-#    name="static",
-# )
 app.mount("/", StaticFiles(directory="natsume-frontend/build", html=True), name="app")
