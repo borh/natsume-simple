@@ -290,3 +290,10 @@ devenv.local.nix
 # pre-commit
 .pre-commit-config.yaml
 
+# Frontend build
+natsume-frontend/build/
+
+# Environment files
+.env
+.env.*
+!.env.example
