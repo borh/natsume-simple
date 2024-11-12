@@ -43,7 +43,7 @@
 		p: string;
 	};
 
-	let apiUrl = 'http://127.0.0.1:8000';
+    let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 	let particles = ['が', 'を', 'に', 'で', 'から', 'より', 'と', 'へ'];
 	let results = writable<Result[]>([]);
 	let noun = writable('時間');
