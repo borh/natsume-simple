@@ -36,6 +36,8 @@
         devShells = {
           default = pkgs.mkShell {
             nativeBuildInputs = [
+              pkgs.zsh
+              pkgs.bash
               pkgs.git
               pkgs.nodejs
               pkgs.bun
@@ -45,7 +47,15 @@
               pkgs.uv
             ];
             shellHook = ''
+              # Set up Python and dependencies
+              PYTHON_VERSION=3.12.7
+              uv python install $PYTHON_VERSION
+              uv python pin $PYTHON_VERSION
               uv sync --dev --extra backend
+
+              # Enter venv by default
+              touch ~/.zshrc
+              exec uv run ${pkgs.zsh}/bin/zsh
             '';
           };
           # TODO: Make backend, data, and frontend-specific devShells as well
