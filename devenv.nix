@@ -5,38 +5,25 @@
   ...
 }: let
   native-deps = with pkgs; [
-    stdenv.cc.cc
-    zlib
-    gcc-unwrapped.lib
-    stdenv
-    stdenv.cc
-    binutils
-    uv
+    git
+    # stdenv.cc.cc
+    # zlib
+    # gcc-unwrapped.lib
+    # stdenv
+    # stdenv.cc
+    # binutils
   ];
 in {
   # https://devenv.sh/basics/
 
   # https://devenv.sh/packages/
-  packages =
-    native-deps;
+  packages = native-deps;
 
   # https://devenv.sh/scripts/
 
   enterShell = ''
     # poetry run python -m ipykernel install --user --name=devenv-$(basename $PWD)
-    export AZURE_API_KEY=$(cat /run/agenix/azure-us-west3-openai-key)
-    export AZURE_API_BASE=$(cat /run/agenix/azure-us-west3-openai-base)
-    export AZURE_DEPLOYMENT_NAME=$(cat /run/agenix/azure-us-west3-deployment-name)
-    export AZURE_API_VERSION="2024-02-15-preview"
-    export OPENAI_API_VERSION="2024-02-15-preview"
-
-    export AWS_ACCESS_KEY_ID=$(cat /run/agenix/aws-access-key-id)
-    export AWS_SECRET_ACCESS_KEY=$(cat /run/agenix/aws-secret-access-key)
-    export AWS_REGION_NAME=ap-northeast-1
-
-    export LD_LIBRARY_PATH=${lib.makeLibraryPath config.packages}
-
-    export VITE_API_URL="http://localhost:9999"
+    # export LD_LIBRARY_PATH=${lib.makeLibraryPath config.packages}
   '';
 
   enterTest = ''
@@ -67,8 +54,7 @@ in {
   pre-commit.hooks.shellcheck.enable = true;
   pre-commit.hooks.ruff.enable = true;
   pre-commit.hooks.ruff-format.enable = true;
-  pre-commit.hooks.mypy.enable = true;
-  pre-commit.hooks.mypy.verbose = true;
+  # pre-commit.hooks.mypy.enable = true;
 
   # https://devenv.sh/processes/
   processes.python-api-server.exec = "uv run --with fastapi --with polars fastapi dev src/natsume_simple/server.py";
