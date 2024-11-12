@@ -36,8 +36,7 @@
         devShells = {
           default = pkgs.mkShell {
             nativeBuildInputs = [
-              pkgs.zsh
-              pkgs.bash
+              pkgs.bashInteractive
               pkgs.git
               pkgs.nodejs
               pkgs.bun
@@ -54,8 +53,7 @@
               uv sync --dev --extra backend
 
               # Enter venv by default
-              touch ~/.zshrc
-              exec uv run ${pkgs.zsh}/bin/zsh
+              exec uv run bash
             '';
           };
           # TODO: Make backend, data, and frontend-specific devShells as well
