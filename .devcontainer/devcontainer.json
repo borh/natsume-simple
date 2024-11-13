@@ -3,15 +3,16 @@
 {
   "name": "Debian",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "features": {
     "ghcr.io/devcontainers/features/nix:1": {
       "multiUser": true,
       "version": "latest",
       // Needed for flakes & nix-direnv:
       "extraNixConfig": "experimental-features = nix-command flakes,keep-outputs = true,keep-derivations = true"
-    },
-    "ghcr.io/devcontainers-community/features/direnv": {}
+    }
   },
   "customizations": {
     "vscode": {
