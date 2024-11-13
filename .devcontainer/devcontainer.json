@@ -31,7 +31,10 @@
         "hyoban.tailwindcss-classname-highlight",
         "jnoortheen.nix-ide",
         "ms-toolsai.jupyter"
-      ]
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": ".venv/bin/python3"
+      }
     }
   },
   "onCreateCommand": {
