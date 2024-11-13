@@ -10,7 +10,8 @@
       "version": "latest",
       // Needed for flakes & nix-direnv:
       "extraNixConfig": "experimental-features = nix-command flakes,keep-outputs = true,keep-derivations = true"
-    }
+    },
+    "ghcr.io/devcontainers-community/features/direnv": {}
   },
   "customizations": {
     "vscode": {
