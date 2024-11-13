@@ -29,7 +29,8 @@
         "editorconfig.editorconfig",
         "antfu.iconify",
         "hyoban.tailwindcss-classname-highlight",
-        "jnoortheen.nix-ide"
+        "jnoortheen.nix-ide",
+        "ms-toolsai.jupyter"
       ]
     }
   },
