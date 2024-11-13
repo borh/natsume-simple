@@ -68,7 +68,8 @@
         packages.run-lint = pkgs.writeShellScriptBin "run-lint" ''
           ${config.packages.initial-setup}/bin/initial-setup
           uvx ruff format
-          uvx ruff check
+          uvx ruff check --output-format=github src notebooks tests
+          ${pkgs.mypy}/bin/mypy --ignore-missing-imports src
         '';
         packages.run-server = pkgs.writeShellApplication {
           name = "run-server";
