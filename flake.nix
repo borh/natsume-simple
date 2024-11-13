@@ -30,8 +30,7 @@
         # Per-system attributes can be defined here. The self' and inputs'
         # module parameters provide easy access to attributes of the same
         # system.
-
-        # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
+        formatter = pkgs.nixfmt-rfc-style;
 
         devShells = {
           default = pkgs.mkShell {
@@ -47,10 +46,7 @@
             ];
             shellHook = ''
               # Set up Python and dependencies
-              PYTHON_VERSION=3.12.7
-              uv python install $PYTHON_VERSION
-              uv python pin $PYTHON_VERSION
-              uv sync --dev --extra backend
+              ${config.packages.initial-setup}/bin/initial-setup
 
               # Enter venv by default
               exec uv run bash
@@ -58,17 +54,45 @@
           };
           # TODO: Make backend, data, and frontend-specific devShells as well
         };
-        packages.default = pkgs.hello;
+
+        packages.initial-setup = pkgs.writeShellScriptBin "initial-setup" ''
+          PYTHON_VERSION=3.12.7
+          ${pkgs.uv}/bin/uv python install $PYTHON_VERSION
+          ${pkgs.uv}/bin/uv python pin $PYTHON_VERSION
+          ${pkgs.uv}/bin/uv sync --dev --extra backend
+        '';
+        packages.run-tests = pkgs.writeShellScriptBin "run-tests" ''
+          ${config.packages.initial-setup}/bin/initial-setup
+          uv run pytest
+        '';
+        packages.run-lint = pkgs.writeShellScriptBin "run-lint" ''
+          ${config.packages.initial-setup}/bin/initial-setup
+          uvx ruff format
+          uvx ruff check
+        '';
+        packages.run-server = pkgs.writeShellApplication {
+          name = "run-server";
+          runtimeInputs = [
+            pkgs.uv
+            pkgs.nodejs
+          ];
+          text = ''
+            ${config.packages.initial-setup}/bin/initial-setup
+            cd natsume-frontend && ${pkgs.nodejs}/bin/npm i && ${pkgs.nodejs}/bin/npm run build && cd ..
+            uv run --with fastapi --with polars fastapi run --host localhost src/natsume_simple/server.py
+          '';
+        };
+        packages.default = config.packages.run-server;
         process-compose."natsume-simple-services" = {
           imports = [
             inputs.services-flake.processComposeModules.default
           ];
-          services = {
-            # TODO: Add build and backend services
-            api."api" = {
-              enable = true;
-            };
-          };
+          # TODO: Add build and backend services
+          # services = {
+          #   api."api" = {
+          #     enable = true;
+          #   };
+          # };
         };
       };
       flake = {
