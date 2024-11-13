@@ -75,6 +75,7 @@
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
+            mkdir -p natsume-frontend/build # Ensure directory exists to not fail test
             uv run pytest
           '';
         };
