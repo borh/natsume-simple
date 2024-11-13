@@ -15,7 +15,13 @@ logger = setup_logger(__name__)
 
 
 def download_jnlp_corpus(data_dir: Path) -> None:
-    """Download the JNLP corpus."""
+    """Download the JNLP corpus from the official website.
+
+    Downloads the NLP_LATEX_CORPUS.zip file and extracts it to the specified directory.
+
+    Args:
+        data_dir: Directory where the corpus will be downloaded and extracted
+    """
     file = data_dir / "NLP_LATEX_CORPUS.zip"
     if not file.is_file():
         logger.info("Downloading JNLP corpus...")
@@ -29,7 +35,14 @@ def download_jnlp_corpus(data_dir: Path) -> None:
 
 
 def convert_latex_to_text(corpus_dir: Path) -> None:
-    """Convert LaTeX files to plain text."""
+    """Convert LaTeX files to plain text using pandoc.
+
+    Finds all .tex files in the directory (recursively) and converts them to .txt files.
+    Skips files that have already been converted.
+
+    Args:
+        corpus_dir: Directory containing LaTeX files to convert
+    """
     latex_files = corpus_dir.rglob("*.tex")
 
     for latex_file in latex_files:
@@ -60,21 +73,62 @@ def convert_latex_to_text(corpus_dir: Path) -> None:
             logger.error("Failed to convert using pandoc, skipping!")
 
 
-def filter_non_japanese(dir: Path) -> Iterator[str]:
-    """Filter out non-Japanese text from converted files."""
+def is_japanese(line: str, min_length: int = 200) -> bool:
+    """Filter a single line to determine if it is likely Japanese text.
+
+    Args:
+        line: The line of text to filter.
+        min_length: Minimum length of the line to keep (default: 200).
+
+    Returns:
+        The line if it passes the Japanese text filters, otherwise None.
+
+    Examples:
+        >>> is_japanese("これは日本語の文章です。", min_length=5)
+        True
+        >>> is_japanese("abc", min_length=5) is None
+        False
+    """
+    line = line.strip()  # Strip newline characters
+    if len(line) <= min_length:
+        return False
+    elif re.search(r"[a-z]{2,}|-{2,}|\||[\d\.]{4,}", line):
+        return False
+    return True
+
+
+def filter_non_japanese(dir: Path, min_length: int = 200) -> Iterator[str]:
+    """Filter out non-Japanese text from converted files.
+
+    This function reads text files and filters out lines that are likely not Japanese text.
+
+    Args:
+        dir: Path to directory containing text files to filter
+        min_length: Minimum length of lines to keep (default: 200)
+
+    Yields:
+        Lines of text that pass the Japanese text filters
+    """
     files = dir.rglob("*.txt")
     for file in files:
         with open(file, encoding="utf-8", errors="replace") as f:
             for line in f:
-                if len(line) <= 200:
-                    continue
-                elif re.search(r"[a-z]{2,}|-{2,}|\||[\d\.]{4,}", line):
-                    continue
-                yield line
+                if is_japanese(line, min_length):
+                    yield line
 
 
 def prepare_jnlp_corpus(data_dir: Path) -> int:
-    """Prepare the JNLP corpus for use."""
+    """Prepare the JNLP corpus by downloading, converting, and filtering.
+
+    Downloads the corpus, converts LaTeX to text, filters non-Japanese content,
+    and saves the result to a single text file.
+
+    Args:
+        data_dir: Directory for storing the corpus data
+
+    Returns:
+        Number of lines in the prepared corpus
+    """
     corpus_dir = data_dir / "NLP_LATEX_CORPUS"
     download_jnlp_corpus(data_dir)
     convert_latex_to_text(corpus_dir)
@@ -91,7 +145,14 @@ def prepare_jnlp_corpus(data_dir: Path) -> int:
 
 
 def get_ted_corpus() -> List[str]:
-    """Get the TED corpus from the datasets library."""
+    """Download and combine TED talk transcripts from multiple years.
+
+    Downloads Japanese transcripts from TED talks using the datasets library,
+    combining data from 2014-2017.
+
+    Returns:
+        List of Japanese sentences from TED talks
+    """
     logger.info("Downloading TED corpus...")
 
     ted_dataset_2014 = datasets.load_dataset(
@@ -121,7 +182,16 @@ def get_ted_corpus() -> List[str]:
 
 
 def prepare_ted_corpus(data_dir: Path) -> int:
-    """Prepare the TED corpus for use."""
+    """Prepare the TED corpus by downloading and saving to file.
+
+    Downloads the TED corpus and saves it to a single text file.
+
+    Args:
+        data_dir: Directory where the corpus will be saved
+
+    Returns:
+        Number of sentences in the corpus
+    """
     ted_corpus = get_ted_corpus()
 
     output_file = data_dir / "ted-corpus.txt"
@@ -133,7 +203,16 @@ def prepare_ted_corpus(data_dir: Path) -> int:
 
 
 def prepare_corpora(data_dir: Path) -> Tuple[int, int]:
-    """Prepare both JNLP and TED corpora."""
+    """Prepare both JNLP and TED corpora.
+
+    Creates the data directory if needed and prepares both corpora.
+
+    Args:
+        data_dir: Directory for storing both corpora
+
+    Returns:
+        Tuple of (JNLP corpus size, TED corpus size)
+    """
     data_dir.mkdir(parents=True, exist_ok=True)
     jnlp_count = prepare_jnlp_corpus(data_dir)
     ted_count = prepare_ted_corpus(data_dir)
@@ -141,7 +220,18 @@ def prepare_corpora(data_dir: Path) -> Tuple[int, int]:
 
 
 def load_corpus(data_dir: Path, corpus_name: str, sample_size: int) -> List[str]:
-    """Load a corpus with a specified sample size."""
+    """Load and sample from a prepared corpus.
+
+    Loads the specified corpus file and returns a random sample of lines.
+
+    Args:
+        data_dir: Directory containing the corpus files
+        corpus_name: Name of the corpus ('jnlp' or 'ted')
+        sample_size: Number of lines to randomly sample
+
+    Returns:
+        List of sampled lines from the corpus
+    """
     corpus_file = data_dir / f"{corpus_name}-corpus.txt"
     with open(corpus_file, "r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -153,7 +243,16 @@ def load_corpus(data_dir: Path, corpus_name: str, sample_size: int) -> List[str]
 def load_corpora(
     data_dir: Path, jnlp_sample_size: int = 3000, ted_sample_size: int = 30000
 ) -> Tuple[List[str], List[str]]:
-    """Load both JNLP and TED corpora with specified sample sizes."""
+    """Load and sample from both JNLP and TED corpora.
+
+    Args:
+        data_dir: Directory containing the corpus files
+        jnlp_sample_size: Number of lines to sample from JNLP corpus
+        ted_sample_size: Number of lines to sample from TED corpus
+
+    Returns:
+        Tuple of (JNLP corpus samples, TED corpus samples)
+    """
     jnlp_corpus = load_corpus(data_dir, "jnlp", jnlp_sample_size)
     ted_corpus = load_corpus(data_dir, "ted", ted_sample_size)
     return jnlp_corpus, ted_corpus
