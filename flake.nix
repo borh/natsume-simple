@@ -70,8 +70,8 @@
             uv sync --dev --extra backend
           '';
         };
-        packages.run-tests = pkgs.writeShellApplication {
-          name = "run-tests";
+        packages.test = pkgs.writeShellApplication {
+          name = "test";
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
@@ -79,8 +79,8 @@
             uv run pytest
           '';
         };
-        packages.run-lint = pkgs.writeShellApplication {
-          name = "run-lint";
+        packages.lint = pkgs.writeShellApplication {
+          name = "lint";
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
@@ -89,8 +89,17 @@
             ${pkgs.mypy}/bin/mypy --ignore-missing-imports src
           '';
         };
-        packages.run-server = pkgs.writeShellApplication {
-          name = "run-server";
+        packages.dev-server = pkgs.writeShellApplication {
+          name = "dev-server";
+          runtimeInputs = runtime-packages;
+          text = ''
+            ${config.packages.initial-setup}/bin/initial-setup
+            cd natsume-frontend && npm i && npm run build && cd ..
+            uv run --with fastapi --with polars fastapi dev --host localhost src/natsume_simple/server.py
+          '';
+        };
+        packages.server = pkgs.writeShellApplication {
+          name = "server";
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
@@ -98,7 +107,7 @@
             uv run --with fastapi --with polars fastapi run --host localhost src/natsume_simple/server.py
           '';
         };
-        packages.default = config.packages.run-server;
+        packages.default = config.packages.server;
         process-compose."natsume-simple-services" = {
           imports = [
             inputs.services-flake.processComposeModules.default

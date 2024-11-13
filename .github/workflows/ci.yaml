@@ -19,6 +19,6 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: DeterminateSystems/flake-checker-action@main
       - name: Run lint
-        run: nix run .#run-lint
+        run: nix run .#lint
       - name: Run tests
-        run: nix run .#run-tests
+        run: nix run .#test
