@@ -1,9 +1,9 @@
-import spacy
-import ginza
-import polars as pl
-from spacy.tokens import Doc, Token, Span
-import torch
-from spacy.symbols import (
+import spacy  # type: ignore
+import ginza  # type: ignore
+import polars as pl  # type: ignore
+from spacy.tokens import Doc, Token, Span  # type: ignore
+import torch  # type: ignore
+from spacy.symbols import (  # type: ignore
     NOUN,
     PROPN,
     PRON,
@@ -233,7 +233,7 @@ def main(
     output_file: Path,
     model_name: Optional[str] = None,
     corpus_name: str = "Unknown",
-):
+) -> None:
     """
     Main function to process a corpus file and save results.
 

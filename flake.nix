@@ -1,82 +1,80 @@
 {
+  description = "natsume-simple nix flake";
+
   inputs = {
-    nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    # nix-ld.url = "github:Mic92/nix-ld";
-    # nix-ld.inputs.nixpkgs.follows = "nixpkgs";
-    madness.url = "github:antithesishq/madness";
-    systems.url = "github:nix-systems/default";
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs";
-    nixpkgs-python.url = "github:cachix/nixpkgs-python";
-    nixpkgs-python.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+    services-flake.url = "github:juspay/services-flake";
   };
 
-  nixConfig = {
-    extra-trusted-public-keys =
-      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
-    extra-substituters = "https://devenv.cachix.org";
-  };
+  outputs = inputs @ {flake-parts, ...}:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        # To import a flake module
+        # 1. Add foo to inputs
+        # 2. Add foo as a parameter to the outputs function
+        # 3. Add here: foo.flakeModule
+        inputs.process-compose-flake.flakeModule
+      ];
+      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
+      perSystem = {
+        config,
+        self',
+        inputs',
+        pkgs,
+        system,
+        ...
+      }: {
+        # Per-system attributes can be defined here. The self' and inputs'
+        # module parameters provide easy access to attributes of the same
+        # system.
 
-  # nix-ld,
-  outputs = { self, nixpkgs, devenv, systems, nixpkgs-unstable, ... }@inputs:
-    let forEachSystem = nixpkgs.lib.genAttrs (import systems);
-    in {
-      packages = forEachSystem (system: {
-        devenv-up = self.devShells.${system}.default.config.procfileScript;
-        # graphviz = nixpkgs-unstable.packages.${system}.graphviz;
-      });
+        # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
 
-      imports = [ inputs.madness.nixosModules.default ];
+        devShells = {
+          default = pkgs.mkShell {
+            nativeBuildInputs = [
+              pkgs.bashInteractive
+              pkgs.git
+              pkgs.nodejs
+              pkgs.bun
+              pkgs.wget
+              pkgs.pandoc
+              pkgs.sqlite
+              pkgs.uv
+            ];
+            shellHook = ''
+              # Set up Python and dependencies
+              PYTHON_VERSION=3.12.7
+              uv python install $PYTHON_VERSION
+              uv python pin $PYTHON_VERSION
+              uv sync --dev --extra backend
 
-      devShells = forEachSystem (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-        in {
-          default = devenv.lib.mkShell {
-            inherit inputs pkgs;
-            modules = [{
-              packages = [ pkgs-unstable.graphviz ];
-
-              languages.python = {
-                enable = true;
-                version = "3.12.6";
-                manylinux = { enable = false; };
-                # libraries = [ "${config.devenv.dotfile}/profile" ];
-                # libraries = with pkgs; [ graphviz ];
-                uv = {
-                  enable = true;
-                  package = pkgs-unstable.uv;
-                  sync = { enable = true; };
-                };
-                # venv = {
-                #   enable = true;
-                #   requirements = ./requirements.lock;
-                # };
-              };
-
-              # https://devenv.sh/processes/
-              # processes.cargo-watch.exec = "cargo-watch";
-
-              # https://devenv.sh/services/
-              # services.postgres.enable = true;
-
-              # export PATH="${config.devenv.dotfile}/profile/bin:$PATH"
-              enterShell = ''
-                uv venv
-                source .devenv/state/venv/bin/activate
-                uv pip install -r pyproject.toml
-                unset LD_LIBRARY_PATH
-              '';
-              # export LD_LIBRARY_PATH=${lib.makeLibraryPath config.packages}
-            }
-            # nix-ld.nixosModules.nix-ld
-            # inputs.madness.nixosModules.default
-
-            # { programs.nix-ld.enable = true; }
-              ];
+              # Enter venv by default
+              exec uv run bash
+            '';
           };
-        });
+          # TODO: Make backend, data, and frontend-specific devShells as well
+        };
+        packages.default = pkgs.hello;
+        process-compose."natsume-simple-services" = {
+          imports = [
+            inputs.services-flake.processComposeModules.default
+          ];
+          services = {
+            # TODO: Add build and backend services
+            api."api" = {
+              enable = true;
+            };
+          };
+        };
+      };
+      flake = {
+        # The usual flake attributes can be defined here, including system-
+        # agnostic ones like nixosModule and system-enumerating ones, although
+        # those are more easily expressed in perSystem.
+      };
     };
 }

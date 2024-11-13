@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v1
+        with:
+          version: "latest"
+      - name: Install dependencies
+        run: uv sync --extra dev --extra backend -p 3.12
+      - name: Mypy
+        # We disable this error in order to not have to install all deps for now
+        run: uv run mypy --ignore-missing-imports src
+      - name: pytest
+        run: uv run pytest
+      - name: lint
+        run: |
+          uv pip install ruff
+          uv run ruff check --output-format=github src tests evaluations
+      - name: format
+        run: uv run ruff format --check src tests evaluations

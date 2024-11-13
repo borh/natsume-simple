@@ -44,7 +44,7 @@ dev-dependencies = [
 #     { index = "pytorch-rocm", marker = "sys_platform != 'darwin' and os_name == 'unix'" },
 #     { index = "pytorch-cuda", marker = "sys_platform != 'darwin'" },
 # ]
-torch = { index = "pytorch-cpu" }
+# torch = { index = "pytorch-cuda" }
 pytorch-triton-rocm = { index = "pytorch-rocm" }
 
 [[tool.uv.index]]

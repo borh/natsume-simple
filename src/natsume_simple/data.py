@@ -7,7 +7,7 @@ from typing import List, Iterator, Tuple
 import random
 import argparse
 
-import datasets
+import datasets  # type: ignore
 from natsume_simple.log import setup_logger
 from natsume_simple.utils import set_random_seed
 
