@@ -1,215 +1,215 @@
 # natsume-simple
 
+[![CI](https://github.com/borh/natsume-simple/actions/workflows/ci.yaml/badge.svg)](https://github.com/borh/natsume-simple/actions/workflows/ci.yaml)
+
 ## 概要
 
 natsume-simpleは日本語の係り受け関係を検索できるシステム
 
-## 開発用OSインストール手順
+## 開発環境のセットアップ
 
-本プロジェクトを動かすにはソースコードをパソコンにダウンロードする必要がある。
-GitHub上からは，ZIP圧縮ファイルでのダウンロードか，Gitでのクローンか，で利用できる。
+本プロジェクトには以下の3つの開発環境のセットアップ方法があります：
 
-ソースコードの最新版が入っているZIPファイルのダウンロードは，[ここ](https://github.com/borh/natsume-simple/archive/refs/heads/main.zip)からできる。
-Git利用には事前にインストール必要がある。
+### Dev Container を使用する場合
 
-コマンドライン以外でもインストール可能であるが，以下はそれぞれのOSのコマンドラインインターフェースを利用したインストール方法：
+[VS Code](https://code.visualstudio.com/)と[Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールした後：
 
--   Linux (Debian/Ubuntuの場合):
-
-```bash
-sudo apt get install git
-```
-
--   macOS:
-
-```zsh
-brew install git
-```
-
--   Windows (最新版でないと[Wingetの設定](https://learn.microsoft.com/ja-jp/windows/package-manager/winget/)が必要):
-
-```powershell
-winget install -e Git.Git
-```
-
-それで`git`での入手方法は：
-
+1. このリポジトリをクローン：
 ```bash
 git clone https://github.com/borh/natsume-simple.git
 ```
 
-インストールは2022年10月時点で，poetryを使用することをおすすめするが，以下は標準のPython/pipによるインストール方法を紹介する。
+2. VS Codeでフォルダを開く
+3. 右下に表示される通知から、もしくはコマンドパレット（F1）から「Dev Containers: Reopen in Container」を選択
+4. コンテナのビルドが完了すると、必要な開発環境が自動的に設定されます
 
-Python以外にもPandocなど外部プログラムも使用しているので，下記OS別にインストール基準も書いている。
+### Nixを使用する場合
 
-### OS別手順
-
-#### macOS
-
+1. [Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer)でNixをインストール：
 ```bash
-brew install pandoc
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | \
+  sh -s -- install
 ```
 
-#### Linux
-
-パッケージマネージャで`pandoc`をインストールする。
-バージョン1ではなく2もしくは3系が必要になる。
-
-#### Windows
-
-```powershell
-winget install pandoc
+2. プロジェクトのセットアップ：
+```bash
+git clone https://github.com/borh/natsume-simple.git
+cd natsume-simple
+nix develop
 ```
 
-## Python環境のインストール
+### 手動セットアップの場合
 
-natsume-simpleは[uv](https://docs.astral.sh/uv)を使用しているが，pip/condaの場合も可能である。
+以下のツールを個別にインストールする必要があります：
+
+- git
+- Python 3.12以上
+- [uv](https://github.com/astral/uv)
+- Node.js
+- pandoc
+
+その後：
 
 ```bash
+git clone https://github.com/borh/natsume-simple.git
+cd natsume-simple
 uv sync --extra backend
+cd natsume-frontend && npm install && npm run build && cd ..
 ```
 
-<!--
-### pip
+## Nixフレークの使用方法
 
-必要なPythonのパッケージは`requirements.txt`に記載されている。
-以下のコマンドでは，現在のPython環境に必要パッケージがインストールし始める。
-他のPythonプログラム・環境と干渉しないためには，仮想環境の利用をおすすめする。
+このプロジェクトはNixフレークを使用して開発環境とビルドを管理しています。以下のコマンドが利用可能です：
+
+### 開発環境
 
 ```bash
-pip install -r requirements.txt
+# 開発環境に入る
+nix develop
+
+# または direnvを使用している場合（推奨）
+direnv allow
 ```
 
-GPUがあれば，上記の`requirements.txt`の代わりに以下のコマンドで一括インストールできる：
+### ビルドとテスト
 
 ```bash
-pip install -r requirements-cuda.txt
+# テストを実行
+nix run .#test
+
+# リンター実行
+nix run .#lint
+
+# 開発サーバー起動（ホットリロード有効）
+nix run .#dev-server
+
+# プロダクションサーバー起動
+nix run .#server
 ```
 
-`requirements.txt`, `requirements-apple-silicon.txt`及び`requirements-cuda.txt`はPoetryから自動生成される。
-
-### GPU
-
-#### CUDA/ROCM (Linux/Windows)
-
-GPUの利用には，OSでの適切なドライバとCuDNNなどのペッケージのインスールの他，GPU対応のspaCyやPyTorchのインストールも必要になる。
-
-例えば，CUDA使用時はGPU対応の[PyTorch](https://pytorch.org/get-started/locally/)（Transformersパッケージで使用）と[CuPY](https://docs.cupy.dev/en/stable/install.html)（spaCyパッケージで使用）をインストールする。
-
-
-PyTorch ([https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)):
-
-```
-pip install torch
-```
-
-spaCy ([https://spacy.io/usage](https://spacy.io/usage)):
-
-```
-pip install -U 'spacy[cuda-autodetect]'
-```
-あるいは
-```
-pip install cupy-cuda12x
-```
-
-#### Apple Silicon (macOS)
-
-spaCyは[thinc](https://github.com/explosion/thinc/issues/792)というライブラリを使用しているので，PyTorch以外，thincの正しいバージョンをインストールする必要がある。
-下記の`requirements-apple-silicon.txt`ですべて記載されているので，インストールするとGPUが使用できるはずである。確認方法は[ここ](https://support.apple.com/guide/activity-monitor/view-gpu-activity-actm9329b315/mac)にある。
+### その他の便利なコマンド
 
 ```bash
-pip install -r requirements-apple-silicon.txt
+# フォーマット
+nix fmt
+
+# ビルド
+nix build
+
+# 開発環境のシェル情報を表示
+nix develop --print-build-logs
 ```
+<!-- TODO
+### process-composeによるサービス管理
 
-### 問題対策
-
-まず，現在利用しているPythonのバージョン・場所を確認する：
+複数のサービスを同時に実行する場合：
 
 ```bash
-which python
-```
-
-```bash
-python -V
-```
-
-Pythonは従来バージョン2と3にわかれていて，OSとそのバージョンによってpythonを実行時，どちらか一方のバージョンを指す。
-間違いなくPython 3を使いたい場合は，python3, pip3の通り，末尾に3をつける。
-現在ではPython 2を使う場面がほとんどないが，同じくpython2で指定することができる。
-また，将来的にはPython 2がインストールされず，pythonが常に3を指すことになる。
-
-### virtualenv仮想環境
-
-上記pipインストールで問題が発生すると，使用するPythonが3.8かそれより最新のものであることを確認するとよい。
-また，他のパッケージとの干渉を除外するために[簡単な仮想環境](https://xkcd.com/1987/)を作る方法がある。
-Python内蔵の仮想環境を作成する場合は[ここ](https://docs.python.org/ja/3/tutorial/venv.html)を参照。
-
-上記の手動の仮想環境作成以外にも，poetry, pipenv, condaの環境・システムがある。
-2022年10月時点では，poetryとその`pyproject.toml`の定義ファイルが人気であろう。
-Anacondaも総括的な環境提供という点で人気である。
-
-#### poetry
-
-[Poetry](https://python-poetry.org/)は仮想環境・プロジェクト管理の総合的なツールで，その定義ファイルは`pyproject.toml`で記述されている。
-
-VS Codeなど一部エディターではプロジェクト内のフォルダ以外に仮想環境を見つけ出せないために，仮想環境を作る前に以下のコマンドでPoetry使用時にフォルダ内に作る設定にする。
-
-```bash
-poetry config virtualenvs.in-project true
-```
-
-Poetryを使う場合は下記コマンドで仮想環境作成，使用ペッケージのインストールを一斉に行える：
-
-```bash
-poetry install
-```
-
-あるいはNVIDIAのGPU搭載時：
-
-```bash
-poetry install -E cuda
-```
-
-上記により`poetry.lock`というファイルが作成される。中身は`pyproject.toml`で記述されている依存パッケージの実際にインストールされたバージョンなどの情報になる。
-
-```bash
-poetry shell
-```
-
-脱出方法は`deactivate`（またはControl+d）。
-
-##### PDM
-
-[PDM](https://pdm.fming.dev/latest/)はPythonの最新スタンダード（PEP 582, 517, 621）に従い，プロジェクト管理を可能にする。
-PDMを使う場合は，`pyproject.toml`の`build-tools`のセクションをPoetryのものと入れ替えることが必要である。
-
-#### conda
-
-conda (Anaconda)で`natsume-simple`という仮想環境にインストールする：
-
-```bash
-conda env create -n natsume-simple -f environment.yml
-```
-
-インストール後は以下のコマンドで仮想環境を有効にできる：
-
-```bash
-conda activate natsume-simple
-```
-
-必要な場合はGPUサポート用のrequirements-*も参照してインストールして下さい。
-
-仮想環境から脱出したいときは`conda deactivate`でできる。
-
-動作確認はAnacondaの2023.09で行われたが，最新のバージョンの使用をおすすめする。
-同じ環境を作る場合は以下のコマンドでできる：
-
-```bash
-conda update conda
-conda install anaconda=2023.0]
+nix run .#process-compose-natsume-simple-services
 ```
 -->
+
+注意：
+- 各コマンドは自動的に必要な依存関係をインストールします
+- `nix develop`で入る開発環境には以下が含まれています：
+  - Python 3.12
+  - Node.js
+  - uv（Pythonパッケージマネージャー）
+  - pandoc
+  - その他開発に必要なツール
+
+
+## CLI使用方法
+
+### 処理の順序
+
+データの準備から検索システムの利用まで、以下の順序で処理を行う必要があります：
+
+1. データの準備（JNLPコーパスとTEDコーパスのダウンロードと前処理）
+2. パターン抽出（各コーパスからのNPVパターンの抽出）
+3. サーバーの起動（検索インターフェースの提供）
+
+### 1. データの準備
+
+```bash
+python src/natsume_simple/data.py --prepare
+```
+
+オプション：
+- `--data-dir PATH` - データを保存するディレクトリ（デフォルト: ./data）
+- `--seed INT` - 乱数シードの設定（デフォルト: 42）
+
+この処理で以下が実行されます：
+- JNLPコーパスのダウンロードと変換
+- TEDコーパスのダウンロードと前処理
+- 前処理済みデータの保存
+
+### 2. データの読み込み
+
+準備済みデータを読み込む場合：
+
+```bash
+python src/natsume_simple/data.py --load \
+    --jnlp-sample-size 3000 \
+    --ted-sample-size 30000
+```
+
+オプション：
+- `--jnlp-sample-size INT` - JNLPコーパスからのサンプルサイズ（デフォルト: 3000）
+- `--ted-sample-size INT` - TEDコーパスからのサンプルサイズ（デフォルト: 30000）
+- `--data-dir PATH` - データディレクトリの指定（デフォルト: ./data）
+- `--seed INT` - 乱数シードの設定（デフォルト: 42）
+
+注意：
+- 各コマンドは必要な依存関係がインストールされていることを前提としています
+- エラーが発生した場合は、依存関係のインストール状態を確認してください
+
+### 3. パターン抽出
+
+```bash
+# JNLPコーパス用
+python src/natsume_simple/pattern-extraction.py \
+    --model ja_ginza_bert_large \
+    --corpus-name "JNLP" \
+    data/jnlp-corpus.txt \
+    data/jnlp_npvs_ja_ginza_bert_large.csv
+
+# TEDコーパス用
+python src/natsume_simple/pattern-extraction.py \
+    --model ja_ginza_bert_large \
+    --corpus-name "TED" \
+    data/ted-corpus.txt \
+    data/ted_npvs_ja_ginza_bert_large.csv
+```
+
+オプション：
+- `--model NAME` - 使用するspaCyモデル（オプション、デフォルト: ja_ginza_bert_large）
+- `--corpus-name NAME` - コーパス名の指定（デフォルト: "Unknown"）
+- `--seed INT` - 乱数シードの設定（デフォルト: 42）
+
+この処理で以下が実行されます：
+- コーパスの読み込み
+- NPVパターンの抽出
+- 結果のCSVファイルへの保存
+
+### 4. サーバーの起動
+
+```bash
+uv run fastapi dev src/natsume_simple/server.py
+```
+
+このコマンドでは，server.pyをFastAPIでウエブサーバで起動し，ブラウザからアクセス可能にする。
+
+オプション：
+- `--reload` - コード変更時の自動リロード（開発時のみ）
+- `--host HOST` - ホストの指定（デフォルト: 127.0.0.1）
+- `--port PORT` - ポートの指定（デフォルト: 8000）
+
+注意：
+- `server.py`では，モデルの指定があるのでご注意。
+- サーバを起動後は，出力される手順に従い，<http://127.0.0.1:8000/>にアクセスする。
+- FastAPIによるドキュメンテーションは<http://127.0.0.1:8000/docs>にある。
+- 環境によっては<http://0.0.0.0:8000>が<http://127.0.0.1:8000>と同様ではない
 
 ## 機能
 
@@ -222,34 +222,42 @@ conda install anaconda=2023.0]
 
 このプロジェクトは以下のファイルを含む：
 
+## プロジェクト構造
+
 ```
 .
-├── data                         # データ
-│   ├── jnlp-sample-3000.txt     # scripts実行後にできるコーパスファイル
-│   └── ted_corpus.txt
-├── environment.yml              # conda仮想環境用
-├── notebooks                    # ノートブック
-│   ├── pattern-extraction.ipynb
-│   └── pattern_extraction_colab.ipynb # Google Colab用
-├── Pipfile                      # pipenv仮想環境用
-├── pyproject.toml               # poetry仮想環境用
-├── README.md                    # このファイル
-├── requirements.txt             # デフォルトの依存ペッケージ定義
-├── requirements-electra.txt     # Electraモデル／GPU使用時の依存ペッケージ定義
-├── requirements-colab.txt       # Google Colab用の依存ペッケージ定義
-├── scripts                      # スクリプト（データ入手用）
-│   ├── convert-jnlp-corpus.sh   # 自然言語処理コーパスの作成
-│   └── get-jnlp-corpus.sh       # 自然言語処理コーパスのダウンロード
-├── server.py                    # APIサーバ
-├── static                       # （古い）検索インターフェースの静的ファイル
-│   ├── app.js
-│   └── index.html
-└── svelte-frontend              # （新）検索インターフェース
-    ├── package.json             # nodejsの依存パッケージ
-    ├── public
-    ├── README.md
-    ├── scripts
-    └── src
+├── data/                        # コーパスとパターン抽出結果
+│   ├── ted_corpus.txt           # TEDコーパス
+│   ├── jnlp_npvs_*.csv          # 自然言語処理コーパスのパターン抽出結果
+│   └── ted_npvs_*.csv           # TEDコーパスのパターン抽出結果
+│
+├── notebooks/                   # 分析・可視化用Jupyterノートブック
+│   ├── pattern-extraction.ipynb # パターン抽出処理の開発用
+│   └── visualization.ipynb      # データ可視化用
+│
+├── natsume-frontend/            # Svelteベースのフロントエンド
+│   ├── src/                     # アプリケーションソース
+│   │   ├── routes/              # ページルーティング
+│   │   └── tailwind.css         # スタイル定義
+│   ├── static/                  # 静的アセット
+│   └── tests/                   # フロントエンドテスト
+│
+├── src/natsume_simple/          # バックエンドPythonパッケージ
+│   ├── server.py                # FastAPIサーバー
+│   ├── data.py                  # データ処理
+│   ├── pattern-extraction.py    # パターン抽出ロジック
+│   └── utils.py                 # ユーティリティ関数
+│
+├── scripts/                     # データ準備スクリプト
+│   ├── get-jnlp-corpus.py       # コーパス取得
+│   └── convert-jnlp-corpus.py   # コーパス変換
+│
+├── tests/                       # バックエンドテスト
+│   └── test_models.py           # モデルテスト
+│
+├── pyproject.toml               # Python依存関係定義
+├── flake.nix                    # Nix開発環境定義
+└── README.md                    # プロジェクトドキュメント
 ```
 
 ### data
@@ -277,58 +285,25 @@ jupyter lab
 python -m ipykernel install --user --name=$(basename $VIRTUAL_ENV)
 ```
 
-### CLI
+### natsume-frontend
 
-```bash
-uv run python src/natsume_simple/data.py --prepare
-```
-
-```bash
-uv run python src/natsume_simple/pattern-extraction.py --corpus-name 自然言語処理 data/jnlp-corpus.txt data/jnlp-npvs.csv
-uv run python src/natsume_simple/pattern-extraction.py --corpus-name TED data/ted-corpus.txt data/ted-npvs.csv
-```
-
-### scripts (deprecated)
-
-（上記の`data.py`に移行してあるのここは参考まで）
-
-定めた手順で，コーパスの前処理・データ整理などを行う。
-ここでは，Hugginface Datasets以外のコーパスを扱う。
-Huggingface Datasetsの方は，直接ノートブックで読み取っている。
-
-注意：`scripts/`に置かれているBashスクリプト（.sh拡張子）はbash, awk, GNU grep, wgetなどを必要とするので，Windowsから実行するときはその環境整備が必要になる。
-また，$\LaTeX$からGiNZAで読み取れる形式に変換するプログラムとして[pandoc](https://pandoc.org/)を使っているため，[pandocのインストール](https://pandoc.org/installing.html)は別途必要になる。
-
-一回ダウンロードしたあとに再度ダウンロードせずに前処理課程を修正できるため，スクリプトはデータ処理をダウンロードと変換に分けている。
-
-```bash
-./get_jnlp_corpus.sh
-./convert_jnlp_corpus.sh
-```
-
-並行して，Bashスクリプトと同様な処理を行うPythonスクリプトもある。
-変換処理では，無作為にコーパス全体から3,000文を抽出しているために，
-
-### svelte-frontend
-
-[Svelte](https://svelte.dev/)で書かれた検索インターフェース。
+[Svelte 5](https://svelte.dev/)で書かれた検索インターフェース。
 
 Svelteのインターフェース（html, css, jsファイル）は以下のコマンドで生成できる：
-（`svelte-frontend/`フォルダから実行）
+（`natsume-frontend/`フォルダから実行）
 
 ```bash
+npm install
 npm run build
 ```
 
 Svelteの使用にはnodejsの環境整備が必要になる。
 
-<!--
-### static
+#### static
 
 サーバ読む静的ファイルを含むファルダ。
+上記の`npm run build`コマンド実行で`static/`下にフロントエンドのファイルが作成される。
 ここに置かれるものは基本的にAPIの`static/`URL下で同一ファイル名でアクセス可能。
-
--->
 
 ## モデルの使用（Pythonコードから）
 
@@ -349,7 +324,7 @@ nlp = spacy.load('ja_ginza')
 
 ノートブックでは，優先的に`ja_ginza_bert_large`を使用するが，インストールされていない場合は`ja_ginza`を使用する。
 
-## データ・コーパスの生成スクリプト
+## データ・コーパスの生成スクリプト（古い）
 
 現在はデータが`notebooks`下にあるJupyter Notebookによって生成される。
 その結果が`data`に保存される。
@@ -359,17 +334,23 @@ nlp = spacy.load('ja_ginza')
 それぞれの依存パッケージ定義ファイルでは，Jupyterのカーネルは定義されていない。
 必要な場合は別途インストールください（VS Codeでは自動でインストールできる）。
 
-## サーバの起動
+## scripts (古い)
 
+（上記の`data.py`に移行してあるのここは参考まで）
+
+定めた手順で，コーパスの前処理・データ整理などを行う。
+ここでは，Hugginface Datasets以外のコーパスを扱う。
+Huggingface Datasetsの方は，直接ノートブックで読み取っている。
+
+注意：`scripts/`に置かれているBashスクリプト（.sh拡張子）はbash, awk, GNU grep, wgetなどを必要とするので，Windowsから実行するときはその環境整備が必要になる。
+また，$\LaTeX$からGiNZAで読み取れる形式に変換するプログラムとして[pandoc](https://pandoc.org/)を使っているため，[pandocのインストール](https://pandoc.org/installing.html)は別途必要になる。
+
+一回ダウンロードしたあとに再度ダウンロードせずに前処理課程を修正できるため，スクリプトはデータ処理をダウンロードと変換に分けている。
 
 ```bash
-uv run fastapi dev src/natsume_simple/server.py
+./get_jnlp_corpus.sh
+./convert_jnlp_corpus.sh
 ```
 
-上記コマンドでは，server.pyをFastAPIでウエブサーバで起動し，ブラウザからアクセス可能にする。
-
-`server.py`では，モデルの指定があるのでご注意。
-
-サーバを起動後は，出力される手順に従い，<http://127.0.0.1:8000/>にアクセスする。
-FastAPIによるドキュメンテーションは<http://127.0.0.1:8000/docs>にある。
-（環境によっては<http://0.0.0.0:8000>が<http://127.0.0.1:8000>と同様ではない）
+並行して，Bashスクリプトと同様な処理を行うPythonスクリプトもある。
+変換処理では，無作為にコーパス全体から3,000文を抽出しているために，
