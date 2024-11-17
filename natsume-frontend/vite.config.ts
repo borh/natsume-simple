@@ -8,5 +8,10 @@ export default defineConfig({
     },
     build: {
         sourcemap: true // Enable source maps
+    },
+    server: {
+        fs: {
+            allow: ['./tailwind.config.js']
+        }
     }
 });
