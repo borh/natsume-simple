@@ -64,7 +64,7 @@
           name = "initial-setup";
           runtimeInputs = runtime-packages;
           text = ''
-            PYTHON_VERSION=3.12.7
+            export PYTHON_VERSION=3.12.7
             uv python install $PYTHON_VERSION
             uv python pin $PYTHON_VERSION
             uv sync --dev --extra backend
@@ -107,6 +107,35 @@
             uv run --with fastapi --with polars fastapi run --host localhost src/natsume_simple/server.py
           '';
         };
+        packages.prepare-data = pkgs.writeShellApplication {
+          name = "prepare-data";
+          runtimeInputs = runtime-packages;
+          text = ''
+            ${config.packages.initial-setup}/bin/initial-setup
+            uv run python src/natsume_simple/data.py --load \
+                --jnlp-sample-size 3000 \
+                --ted-sample-size 30000
+          '';
+        };
+        packages.extract-patterns = pkgs.writeShellApplication {
+          name = "extract-patterns";
+          runtimeInputs = runtime-packages;
+          text = ''
+            ${config.packages.initial-setup}/bin/initial-setup
+            uv run python src/natsume_simple/pattern-extraction.py \
+                --model ja_ginza \
+                --corpus-name "JNLP" \
+                data/jnlp-corpus.txt \
+                data/jnlp_npvs_ja_ginza.csv
+
+            uv run python src/natsume_simple/pattern-extraction.py \
+                --model ja_ginza \
+                --corpus-name "TED" \
+                data/ted-corpus.txt \
+                data/ted_npvs_ja_ginza.csv
+          '';
+        };
+
         packages.default = config.packages.server;
         process-compose."natsume-simple-services" = {
           imports = [
