@@ -41,7 +41,8 @@
           default = pkgs.mkShell {
             nativeBuildInputs =
               [
-                pkgs.bashInteractive
+                pkgs.bash
+                pkgs.zsh
                 pkgs.git
                 pkgs.bun
                 pkgs.wget
@@ -54,7 +55,7 @@
               ${config.packages.initial-setup}/bin/initial-setup
 
               # Enter venv by default
-              exec uv run bash
+              exec uv run ${pkgs.zsh}/bin/zsh
             '';
           };
           # TODO: Make backend, data, and frontend-specific devShells as well
