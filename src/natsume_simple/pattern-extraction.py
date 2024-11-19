@@ -226,16 +226,21 @@ def process_corpus(
 
 
 def save_results(
-    results: List[Tuple[str, str, str]], output_file: Path, corpus_name: str
+    results: List[Tuple[str, str, str]], 
+    data_dir: Path,
+    corpus_name: str,
+    model_name: str
 ):
     """
-    Save results to a CSV file.
+    Save results to a CSV file using the standard naming convention.
 
     Args:
         results (List[Tuple[str, str, str]]): The NPV patterns to save.
-        output_file (Path): The path to save the CSV file.
-        corpus_name (str): The name of the corpus.
+        data_dir (Path): Directory to save the output file.
+        corpus_name (str): The name of the corpus ('ted' or 'jnlp').
+        model_name (str): Name of the spaCy model used.
     """
+    output_file = data_dir / f"{corpus_name}_npvs_{model_name}.csv"
     df = pl.DataFrame(results, schema=["n", "p", "v"], orient="row")
     df = df.with_columns(pl.lit(corpus_name).alias("corpus"))
     df.write_csv(output_file)
@@ -246,7 +251,7 @@ nlp, suru_token = load_nlp_model()
 
 def main(
     input_file: Path,
-    output_file: Path,
+    data_dir: Path,
     model_name: Optional[str] = None,
     corpus_name: str = "Unknown",
 ) -> None:
@@ -255,11 +260,12 @@ def main(
 
     Args:
         input_file (Path): The path to the input corpus file.
-        output_file (Path): The path to save the output CSV file.
+        data_dir (Path): Directory to save the output file.
         model_name (Optional[str]): The name of the spaCy model to use.
-        corpus_name (str): The name of the corpus.
+        corpus_name (str): The name of the corpus ('ted' or 'jnlp').
     """
     global nlp, suru_token
+    used_model = model_name if model_name else nlp.meta["name"]
     if model_name:
         nlp, suru_token = load_nlp_model(model_name)
 
@@ -267,18 +273,18 @@ def main(
         corpus = f.readlines()
 
     results = process_corpus(corpus, nlp, suru_token)
-    save_results(results, output_file, corpus_name)
+    save_results(results, data_dir, corpus_name, used_model)
 
     logger.info(f"Processed {len(corpus)} lines.")
     logger.info(f"Extracted {len(results)} NPV patterns.")
-    logger.info(f"Results saved to {output_file}")
+    logger.info(f"Results saved to {data_dir}/{corpus_name}_npvs_{used_model}.csv")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract NPV patterns from a corpus.")
     parser.add_argument("input_file", type=Path, help="Path to the input corpus file")
     parser.add_argument(
-        "output_file", type=Path, help="Path to save the output CSV file"
+        "data_dir", type=Path, help="Directory to save the output CSV file"
     )
     parser.add_argument("--model", type=str, help="Name of the spaCy model to use")
     parser.add_argument(
