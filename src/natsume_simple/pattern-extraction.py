@@ -63,14 +63,21 @@ def load_nlp_model(
 
 
 def pairwise(iterable: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
-    """
-    Create pairwise iterator from an iterable.
+    """Create pairwise iterator from an iterable.
 
     Args:
         iterable (Iterable[Any]): The input iterable.
 
     Returns:
         Iterator[Tuple[Any, Any]]: An iterator of pairs.
+
+    Examples:
+        >>> list(pairwise([1, 2, 3, 4]))
+        [(1, 2), (2, 3), (3, 4)]
+        >>> list(pairwise("abc"))
+        [('a', 'b'), ('b', 'c')]
+        >>> list(pairwise([]))
+        []
     """
     a, b = tee(iterable)
     next(b, None)
@@ -78,14 +85,23 @@ def pairwise(iterable: Iterable[Any]) -> Iterator[Tuple[Any, Any]]:
 
 
 def simple_lemma(token: Token) -> str:
-    """
-    Get a simplified lemma for a UniDic token.
+    """Get a simplified lemma for a UniDic token.
 
     Args:
         token (Token): The input token.
 
     Returns:
         str: The simplified lemma.
+
+    Examples:
+        >>> from spacy.tokens import Token
+        >>> nlp = spacy.load("ja_ginza")
+        >>> simple_lemma(nlp("する")[0])
+        'する'
+        >>> simple_lemma(nlp("居る")[0])
+        '居る'
+        >>> simple_lemma(nlp("食べる")[0])
+        '食べる'
     """
     if token.norm_ == "為る":
         return "する"

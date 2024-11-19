@@ -29,6 +29,26 @@ def load_database(model_name: str) -> pl.DataFrame:
 
 
 def calculate_corpus_norm(db: pl.DataFrame) -> Dict[str, float]:
+    """Calculate normalization factors for different corpora.
+
+    Args:
+        db: DataFrame containing corpus frequencies
+
+    Returns:
+        Dictionary mapping corpus names to their normalization factors
+
+    Examples:
+        >>> import polars as pl
+        >>> df = pl.DataFrame({
+        ...     "corpus": ["ted", "ted", "jnlp", "jnlp", "jnlp"],
+        ...     "frequency": [1, 2, 3, 2, 1]
+        ... })
+        >>> norms = calculate_corpus_norm(df)
+        >>> norms["ted"] == 1.0  # ted has lower total frequency
+        True
+        >>> norms["jnlp"] == 0.5  # jnlp has double the frequency
+        True
+    """
     corpus_freqs = {
         corpus: db.filter(pl.col("corpus") == corpus)["frequency"].sum()
         for corpus in db["corpus"].unique()
