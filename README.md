@@ -19,7 +19,7 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 git clone https://github.com/borh/natsume-simple.git
 ```
 
-2. VS Codeでフォルダを開く
+2. VSCodeでフォルダを開く
 3. 右下に表示される通知から、もしくはコマンドパレット（F1）から「Dev Containers: Reopen in Container」を選択
 4. コンテナのビルドが完了すると、必要な開発環境が自動的に設定されます
 
