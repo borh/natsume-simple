@@ -220,6 +220,31 @@ def get_ted_corpus() -> List[str]:
     return ted_corpus
 
 
+def save_corpus(data_dir: Path, corpus_name: str, corpus: List[str]) -> None:
+    """Save a corpus to a file using standard naming convention.
+
+    Args:
+        data_dir: Directory to save the corpus file
+        corpus_name: Name of the corpus (e.g., 'jnlp', 'ted')
+        corpus: List of corpus lines to save
+    """
+    output_file = data_dir / f"{corpus_name}-corpus.txt"
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.writelines(corpus)
+    logger.info(f"Sampled {corpus_name} corpus saved to {output_file}")
+
+
+def save_corpora(data_dir: Path, corpora: dict[str, List[str]]) -> None:
+    """Save multiple corpora to files.
+
+    Args:
+        data_dir: Directory to save the corpus files
+        corpora: Dictionary mapping corpus names to their content
+    """
+    for corpus_name, corpus in corpora.items():
+        save_corpus(data_dir, corpus_name, corpus)
+
+
 def prepare_ted_corpus(data_dir: Path) -> int:
     """Prepare the TED corpus by downloading and saving to file.
 
@@ -232,12 +257,7 @@ def prepare_ted_corpus(data_dir: Path) -> int:
         Number of sentences in the corpus
     """
     ted_corpus = get_ted_corpus()
-
-    output_file = data_dir / "ted-corpus.txt"
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write("\n".join(ted_corpus))
-
-    logger.info(f"TED corpus saved to {output_file}")
+    save_corpus(data_dir, "ted", ted_corpus)
     return len(ted_corpus)
 
 
@@ -368,3 +388,7 @@ if __name__ == "__main__":
             logger.info(
                 f"Loaded {len(ted_corpus)} sentences from TED corpus (sample size: {args.ted_sample_size})"
             )
+            save_corpora(args.data_dir, {
+                "jnlp": jnlp_corpus,
+                "ted": ted_corpus
+            })
