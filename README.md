@@ -12,7 +12,7 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 
 ### Dev Container を使用する場合
 
-[VS Code](https://code.visualstudio.com/)と[Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールした後：
+[VSCode](https://code.visualstudio.com/)と[Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールした後：
 
 1. このリポジトリをクローン：
 ```bash
@@ -276,7 +276,7 @@ uv run fastapi dev src/natsume_simple/server.py
 特に動的なプログラミングをするときや，データの性質を確認したいときに活用する。
 ここでは，係り受け関係の抽出はすべてノートブック上で行う。
 
-VS Codeなどでは，使用したいPythonの環境を選択の上，実行してください。
+VSCodeなどでは，使用したいPythonの環境を選択の上，実行してください。
 Google Colabで使用する場合は，[リンク](https://colab.research.google.com/drive/1pb7MXf2Q-4MkadWHmzUrb-qXsAVG4--T?usp=sharing)から開くか，`pattern_extraction_colab.ipynb`のファイルをColabにアップロードして利用する。
 
 Jupyter Notebook/JupyterLabでは使用したPythonの環境をインストールの上，Jupterを立ち上げてください。
@@ -338,7 +338,7 @@ nlp = spacy.load('ja_ginza')
 結果はモデルによって異なるとしてファイル名の末尾にモデル名も記載されている。
 
 それぞれの依存パッケージ定義ファイルでは，Jupyterのカーネルは定義されていない。
-必要な場合は別途インストールください（VS Codeでは自動でインストールできる）。
+必要な場合は別途インストールください（VSCodeでは自動でインストールできる）。
 
 ## scripts (古い)
 
