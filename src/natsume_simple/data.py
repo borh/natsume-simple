@@ -1,4 +1,3 @@
-import re
 import subprocess
 import urllib.request
 import zipfile
@@ -81,20 +80,60 @@ def is_japanese(line: str, min_length: int = 200) -> bool:
         min_length: Minimum length of the line to keep (default: 200).
 
     Returns:
-        The line if it passes the Japanese text filters, otherwise None.
+        True if Japanese characters make up at least 50% of the text.
 
     Examples:
         >>> is_japanese("これは日本語の文章です。", min_length=5)
         True
-        >>> is_japanese("abc", min_length=5) is None
+        >>> is_japanese("abc", min_length=5)
         False
+        >>> is_japanese("This is English text", min_length=5)
+        False
+        >>> is_japanese("123.456.789", min_length=5)
+        False
+        >>> is_japanese("日本語とEnglishの混ざった文", min_length=5)  # Mixed but mostly Japanese
+        True
+        >>> is_japanese("This is mostly English with some 日本語", min_length=5)  # Mixed but mostly English
+        False
+        >>> is_japanese("テスト", min_length=2)  # Katakana
+        True
+        >>> is_japanese("ひらがな", min_length=2)  # Hiragana
+        True
+        >>> is_japanese("漢字", min_length=2)  # Kanji
+        True
+        >>> is_japanese("！？＆", min_length=2)  # Japanese punctuation
+        True
+        >>> is_japanese("Ｈｅｌｌｏ", min_length=2)  # Fullwidth romaji
+        True
     """
-    line = line.strip()  # Strip newline characters
-    if len(line) <= min_length:
-        return False
-    elif re.search(r"[a-z]{2,}|-{2,}|\||[\d\.]{4,}", line):
-        return False
-    return True
+    line = line.strip()
+
+    def is_japanese_char(c: str) -> bool:
+        code = ord(c)
+        return any([
+            # Hiragana (3040-309F)
+            0x3040 <= code <= 0x309F,
+            # Katakana (30A0-30FF)
+            0x30A0 <= code <= 0x30FF,
+            # Kanji (4E00-9FFF)
+            0x4E00 <= code <= 0x9FFF,
+            # Fullwidth ASCII variants (FF00-FF5E)
+            0xFF00 <= code <= 0xFF5E,
+            # Japanese punctuation and symbols (3000-303F)
+            0x3000 <= code <= 0x303F,
+            # Additional CJK symbols and punctuation (31F0-31FF)
+            0x31F0 <= code <= 0x31FF,
+            # Additional Kanji (3400-4DBF)
+            0x3400 <= code <= 0x4DBF,
+        ])
+
+    if len(line) < min_length:
+        # For short strings, require 100% Japanese characters
+        return all(is_japanese_char(c) for c in line)
+    
+    # For longer strings, require at least 50% Japanese characters
+    japanese_char_count = sum(1 for c in line if is_japanese_char(c))
+    return (japanese_char_count / len(line)) >= 0.5
 
 
 def filter_non_japanese(dir: Path, min_length: int = 200) -> Iterator[str]:
@@ -222,8 +261,6 @@ def prepare_corpora(data_dir: Path) -> Tuple[int, int]:
 def load_corpus(data_dir: Path, corpus_name: str, sample_size: int) -> List[str]:
     """Load and sample from a prepared corpus.
 
-    Loads the specified corpus file and returns a random sample of lines.
-
     Args:
         data_dir: Directory containing the corpus files
         corpus_name: Name of the corpus ('jnlp' or 'ted')
@@ -231,6 +268,15 @@ def load_corpus(data_dir: Path, corpus_name: str, sample_size: int) -> List[str]
 
     Returns:
         List of sampled lines from the corpus
+
+    Examples:
+        >>> from io import StringIO
+        >>> from unittest.mock import patch
+        >>> test_data = StringIO("line1\\nline2\\nline3\\nline4\\nline5")
+        >>> with patch('builtins.open', return_value=test_data):
+        ...     lines = load_corpus(Path("."), "test", 3)
+        ...     len(lines)
+        3
     """
     corpus_file = data_dir / f"{corpus_name}-corpus.txt"
     with open(corpus_file, "r", encoding="utf-8") as f:
