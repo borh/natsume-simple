@@ -77,11 +77,4 @@ def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
     matches = db.filter(pl.col("v") == verb).drop("v").to_dicts()
     return matches
 
-
-@app.get("/npv/noun/{verb}")
-def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
-    matches = db.filter(pl.col("v") == verb).drop("v").to_dicts()
-    return matches
-
-
 app.mount("/", StaticFiles(directory="natsume-frontend/build", html=True), name="app")
