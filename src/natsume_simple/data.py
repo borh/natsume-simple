@@ -110,27 +110,29 @@ def is_japanese(line: str, min_length: int = 200) -> bool:
 
     def is_japanese_char(c: str) -> bool:
         code = ord(c)
-        return any([
-            # Hiragana (3040-309F)
-            0x3040 <= code <= 0x309F,
-            # Katakana (30A0-30FF)
-            0x30A0 <= code <= 0x30FF,
-            # Kanji (4E00-9FFF)
-            0x4E00 <= code <= 0x9FFF,
-            # Fullwidth ASCII variants (FF00-FF5E)
-            0xFF00 <= code <= 0xFF5E,
-            # Japanese punctuation and symbols (3000-303F)
-            0x3000 <= code <= 0x303F,
-            # Additional CJK symbols and punctuation (31F0-31FF)
-            0x31F0 <= code <= 0x31FF,
-            # Additional Kanji (3400-4DBF)
-            0x3400 <= code <= 0x4DBF,
-        ])
+        return any(
+            [
+                # Hiragana (3040-309F)
+                0x3040 <= code <= 0x309F,
+                # Katakana (30A0-30FF)
+                0x30A0 <= code <= 0x30FF,
+                # Kanji (4E00-9FFF)
+                0x4E00 <= code <= 0x9FFF,
+                # Fullwidth ASCII variants (FF00-FF5E)
+                0xFF00 <= code <= 0xFF5E,
+                # Japanese punctuation and symbols (3000-303F)
+                0x3000 <= code <= 0x303F,
+                # Additional CJK symbols and punctuation (31F0-31FF)
+                0x31F0 <= code <= 0x31FF,
+                # Additional Kanji (3400-4DBF)
+                0x3400 <= code <= 0x4DBF,
+            ]
+        )
 
     if len(line) < min_length:
         # For short strings, require 100% Japanese characters
         return all(is_japanese_char(c) for c in line)
-    
+
     # For longer strings, require at least 50% Japanese characters
     japanese_char_count = sum(1 for c in line if is_japanese_char(c))
     return (japanese_char_count / len(line)) >= 0.5
@@ -388,7 +390,4 @@ if __name__ == "__main__":
             logger.info(
                 f"Loaded {len(ted_corpus)} sentences from TED corpus (sample size: {args.ted_sample_size})"
             )
-            save_corpora(args.data_dir, {
-                "jnlp": jnlp_corpus,
-                "ted": ted_corpus
-            })
+            save_corpora(args.data_dir, {"jnlp": jnlp_corpus, "ted": ted_corpus})

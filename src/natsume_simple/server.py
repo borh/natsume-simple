@@ -68,8 +68,14 @@ def get_corpus_norm() -> Dict[str, float]:
 
 
 @app.get("/npv/noun/{noun}")
-def read_npv(noun: str) -> List[Dict[str, Any]]:
+def read_npv_noun(noun: str) -> List[Dict[str, Any]]:
     matches = db.filter(pl.col("n") == noun).drop("n").to_dicts()
+    return matches
+
+
+@app.get("/npv/noun/{verb}")
+def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
+    matches = db.filter(pl.col("v") == verb).drop("v").to_dicts()
     return matches
 
 

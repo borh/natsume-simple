@@ -226,10 +226,10 @@ def process_corpus(
 
 
 def save_results(
-    results: List[Tuple[str, str, str]], 
+    results: List[Tuple[str, str, str]],
     data_dir: Path,
     corpus_name: str,
-    model_name: str
+    model_name: str,
 ):
     """
     Save results to a CSV file using the standard naming convention.
