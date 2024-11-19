@@ -123,19 +123,28 @@
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
             uv run python src/natsume_simple/pattern-extraction.py \
+                --input-file data/jnlp-corpus.txt \
+                --data-dir data \
                 --model ja_ginza \
-                --corpus-name "JNLP" \
-                data/jnlp-corpus.txt \
-                data/jnlp_npvs_ja_ginza.csv
+                --corpus-name "jnlp"
 
             uv run python src/natsume_simple/pattern-extraction.py \
+                --input-file data/ted-corpus.txt \
+                --data-dir data \
                 --model ja_ginza \
-                --corpus-name "TED" \
-                data/ted-corpus.txt \
-                data/ted_npvs_ja_ginza.csv
+                --corpus-name "ted"
           '';
         };
-
+        packages.run-all = pkgs.writeShellApplication {
+          name = "run-all";
+          runtimeInputs = runtime-packages;
+          text = ''
+            ${config.packages.initial-setup}/bin/initial-setup
+            ${config.packages.prepare-data}/bin/prepare-data
+            ${config.packages.extract-patterns}/bin/extract-patterns
+            ${config.packages.server}/bin/server
+          '';
+        };
         packages.default = config.packages.server;
         process-compose."natsume-simple-services" = {
           imports = [
