@@ -54,8 +54,9 @@
               # Set up Python and dependencies
               ${config.packages.initial-setup}/bin/initial-setup
 
-              # Enter venv by default
-              exec uv run ${pkgs.zsh}/bin/zsh
+              # Enter venv by default via zsh (ignoring .zshrc)
+              echo "Entering natsume-simple venv via uv..."
+              exec uv run ${pkgs.zsh}/bin/zsh -f
             '';
           };
           # TODO: Make backend, data, and frontend-specific devShells as well
