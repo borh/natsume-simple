@@ -51,13 +51,15 @@
               ]
               ++ runtime-packages;
             shellHook = ''
-              stty sane
+              # Resetting tty settings prevents issues exiting the shell
+              ${pkgs.coreutils}/bin/stty sane
 
               # Set up Python and dependencies
               ${config.packages.initial-setup}/bin/initial-setup
 
               # Enter venv by default via zsh (ignoring .zshrc)
               echo "Entering natsume-simple venv via uv..."
+              export PROMPT='(uv) %F{blue}%~%f %(?.%F{green}.%F{red})%#%f '
               exec uv run ${pkgs.zsh}/bin/zsh -f
             '';
           };
