@@ -51,6 +51,8 @@
               ]
               ++ runtime-packages;
             shellHook = ''
+              stty sane
+
               # Set up Python and dependencies
               ${config.packages.initial-setup}/bin/initial-setup
 
