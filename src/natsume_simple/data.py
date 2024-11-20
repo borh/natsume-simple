@@ -1,12 +1,13 @@
+import argparse
+import random
 import subprocess
 import urllib.request
 import zipfile
 from pathlib import Path
-from typing import List, Iterator, Tuple
-import random
-import argparse
+from typing import Iterator, List, Tuple
 
 import datasets  # type: ignore
+
 from natsume_simple.log import setup_logger
 from natsume_simple.utils import set_random_seed
 

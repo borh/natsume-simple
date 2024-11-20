@@ -90,8 +90,8 @@
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
-            uvx ruff format
-            uvx ruff check --output-format=github src notebooks tests
+            uv run ruff format
+            uv run ruff check --fix --select I --output-format=github src notebooks tests
             ${pkgs.mypy}/bin/mypy --ignore-missing-imports src
           '';
         };

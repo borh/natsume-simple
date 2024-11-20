@@ -1,28 +1,30 @@
-import spacy  # type: ignore
+import argparse
+import re
+from collections.abc import Iterator
+from itertools import chain, takewhile, tee
+from pathlib import Path
+from typing import Any, Iterable, List, Optional, Tuple
+
 import ginza  # type: ignore
 import polars as pl  # type: ignore
-from spacy.tokens import Doc, Token, Span  # type: ignore
+import spacy  # type: ignore
 import torch  # type: ignore
 from spacy.symbols import (  # type: ignore
-    NOUN,
-    PROPN,
-    PRON,
-    NUM,
-    VERB,
-    SYM,
-    PUNCT,
     ADP,
+    NOUN,
+    NUM,
+    PRON,
+    PROPN,
+    PUNCT,
     SCONJ,
+    SYM,
+    VERB,
+    nsubj,
     obj,
     obl,
-    nsubj,
 )
-from typing import List, Tuple, Optional, Iterable, Any
-import re
-from pathlib import Path
-from itertools import chain, takewhile, tee
-from collections.abc import Iterator
-import argparse
+from spacy.tokens import Doc, Span, Token  # type: ignore
+
 from natsume_simple.log import setup_logger
 from natsume_simple.utils import set_random_seed
 

@@ -5,11 +5,12 @@
 # ]
 # ///
 
-from fastapi import FastAPI  # type: ignore
-from fastapi.staticfiles import StaticFiles  # type: ignore
-from fastapi.middleware.cors import CORSMiddleware  # type: ignore
+from typing import Any, Dict, List
+
 import polars as pl  # type: ignore
-from typing import Dict, List, Any
+from fastapi import FastAPI  # type: ignore
+from fastapi.middleware.cors import CORSMiddleware  # type: ignore
+from fastapi.staticfiles import StaticFiles  # type: ignore
 
 app = FastAPI()
 
