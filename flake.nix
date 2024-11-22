@@ -2,11 +2,17 @@
   description = "natsume-simple nix flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
-    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
-    services-flake.url = "github:juspay/services-flake";
+
+    # process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+    # services-flake.url = "github:juspay/services-flake";
+
+    # nix2container = {
+    #   url = "github:nlewo/nix2container";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = inputs @ {flake-parts, ...}:
@@ -16,7 +22,7 @@
         # 1. Add foo to inputs
         # 2. Add foo as a parameter to the outputs function
         # 3. Add here: foo.flakeModule
-        inputs.process-compose-flake.flakeModule
+        # inputs.process-compose-flake.flakeModule
       ];
       systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
       perSystem = {
@@ -25,11 +31,20 @@
         inputs',
         pkgs,
         system,
+        lib,
         ...
       }: let
         runtime-packages = [
           pkgs.uv
           pkgs.nodejs
+        ];
+        development-packages = [
+          pkgs.bashInteractive
+          pkgs.git
+          pkgs.bun
+          pkgs.wget
+          pkgs.pandoc
+          pkgs.sqlite
         ];
       in {
         # Per-system attributes can be defined here. The self' and inputs'
@@ -39,28 +54,39 @@
 
         devShells = {
           default = pkgs.mkShell {
-            nativeBuildInputs =
-              [
-                pkgs.bash
-                pkgs.zsh
-                pkgs.git
-                pkgs.bun
-                pkgs.wget
-                pkgs.pandoc
-                pkgs.sqlite
-              ]
-              ++ runtime-packages;
-            shellHook = ''
-              # Resetting tty settings prevents issues exiting the shell
+            nativeBuildInputs = development-packages ++ runtime-packages;
+            shellHook = let
+              p = self'.packages;
+              e = pn: lib.getBin pn;
+              local-packages = map (pn: e pn) (with p; [
+                run-tests
+                lint
+                prepare-data
+                extract-patterns
+                build-frontend
+                dev-server
+                server
+                run-all
+              ]);
+              path-string = (lib.concatStringsSep "/bin:" local-packages) + "/bin";
+            in ''
+              # Resetting tty settings prevents issues after exiting the shell
               ${pkgs.coreutils}/bin/stty sane
+              export TERM="xterm-256color"
+              export LANG="en_US.UTF-8"
+              export LC_ALL="en_US.UTF-8"
+              # Set up shell and prompt
+              export SHELL=${pkgs.bashInteractive}/bin/zsh
+              export PS1='(uv) \[\e[34m\]\w\[\e[0m\] $(if [[ $? == 0 ]]; then echo -e "\[\e[32m\]"; else echo -e "\[\e[31m\]"; fi)#\[\e[0m\] '
+              # Add local packages to PATH
+              export PATH=${path-string}:$PATH
 
               # Set up Python and dependencies
               ${config.packages.initial-setup}/bin/initial-setup
 
-              # Enter venv by default via zsh (ignoring .zshrc)
+              # Enter venv by default via bash (ignoring existing configs)
               echo "Entering natsume-simple venv via uv..."
-              export PROMPT='(uv) %F{blue}%~%f %(?.%F{green}.%F{red})%#%f '
-              exec uv run ${pkgs.zsh}/bin/zsh -f
+              exec uv run ${pkgs.bashInteractive}/bin/bash --noprofile --norc
             '';
           };
           # TODO: Make backend, data, and frontend-specific devShells as well
@@ -76,8 +102,8 @@
             uv sync --dev --extra backend
           '';
         };
-        packages.test = pkgs.writeShellApplication {
-          name = "test";
+        packages.run-tests = pkgs.writeShellApplication {
+          name = "run-tests";
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
@@ -95,12 +121,20 @@
             ${pkgs.mypy}/bin/mypy --ignore-missing-imports src
           '';
         };
+        packages.build-frontend = pkgs.writeShellApplication {
+          name = "build-frontend";
+          runtimeInputs = runtime-packages;
+          text = ''
+            ${config.packages.initial-setup}/bin/initial-setup
+            cd natsume-frontend && npm i && npm run build && cd ..
+          '';
+        };
         packages.dev-server = pkgs.writeShellApplication {
           name = "dev-server";
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
-            cd natsume-frontend && npm i && npm run build && cd ..
+            ${config.packages.build-frontend}/bin/build-frontend
             uv run --with fastapi --with polars fastapi dev --host localhost src/natsume_simple/server.py
           '';
         };
@@ -109,7 +143,7 @@
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
-            cd natsume-frontend && npm i && npm run build && cd ..
+            ${config.packages.build-frontend}/bin/build-frontend
             uv run --with fastapi --with polars fastapi run --host localhost src/natsume_simple/server.py
           '';
         };
@@ -118,6 +152,7 @@
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
+            uv run python src/natsume_simple/data.py --prepare
             uv run python src/natsume_simple/data.py --load \
                 --jnlp-sample-size 3000 \
                 --ted-sample-size 30000
@@ -152,17 +187,6 @@
           '';
         };
         packages.default = config.packages.server;
-        process-compose."natsume-simple-services" = {
-          imports = [
-            inputs.services-flake.processComposeModules.default
-          ];
-          # TODO: Add build and backend services
-          # services = {
-          #   api."api" = {
-          #     enable = true;
-          #   };
-          # };
-        };
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
