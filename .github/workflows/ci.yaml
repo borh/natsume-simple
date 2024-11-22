@@ -21,4 +21,4 @@ jobs:
       - name: Run lint
         run: nix run .#lint
       - name: Run tests
-        run: nix run .#test
+        run: nix run .#run-tests
