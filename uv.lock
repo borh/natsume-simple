@@ -336,6 +336,20 @@ wheels = [
 ]
 
 [[package]]
+name = "cupy-cuda12x"
+version = "13.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fastrlock" },
+    { name = "numpy" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0d/02/e94f7c26a5f446888d8753d4b6642e5107f9fde166d1ac23b7de95ccea7b/cupy_cuda12x-13.3.0-cp312-cp312-manylinux2014_aarch64.whl", hash = "sha256:bbd0d916310391faf0d7dc9c58fff7a6dc996b67e5768199160bbceb5ebdda8c", size = 103894953 },
+    { url = "https://files.pythonhosted.org/packages/90/dc/da09e5184d94146b8cbf240c2bef1c4851cbafd7e2d60cc71b1530c766ec/cupy_cuda12x-13.3.0-cp312-cp312-manylinux2014_x86_64.whl", hash = "sha256:e206bd8664f0763732b6012431f484ee535bffd77a5ae95e9bfe1c7c72396625", size = 90980377 },
+    { url = "https://files.pythonhosted.org/packages/14/11/8bc53cab1466605ba88ba3c7243078a784ee2cd8974f5602a491882af9af/cupy_cuda12x-13.3.0-cp312-cp312-win_amd64.whl", hash = "sha256:88ef1478f00ae252da0026e7f04f70c9bb6a2dc130ba5f1e5bc5e8069a928bf5", size = 69499349 },
+]
+
+[[package]]
 name = "cymem"
 version = "2.0.8"
 source = { registry = "https://pypi.org/simple" }
@@ -510,6 +524,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/92/86/c6392b7d6fbfa3f5eb22054645ec7be550a21bfb00ce9586ba2bc18e12d2/fastlite-0.0.13.tar.gz", hash = "sha256:e3039dd3ef144953691ea93ed902e46885a7d904feae92a11c835196693ad370", size = 20596 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6c/b4/0d9e28d1de34378033ce6305f531c2e9dd4adc00915d57f83d1acfa805d7/fastlite-0.0.13-py3-none-any.whl", hash = "sha256:8a8fac42ff71cdebd03272a8a2d8564c266dda1510b8d3e2dfaeae8a69c3e834", size = 16464 },
+]
+
+[[package]]
+name = "fastrlock"
+version = "0.8.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/89/4b/26357c444b48f3f4e3c17b999274e6c60f2367f7e9d454ca2280d8b463e1/fastrlock-0.8.2.tar.gz", hash = "sha256:644ec9215cf9c4df8028d8511379a15d9c1af3e16d80e47f1b6fdc6ba118356a", size = 79508 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0d/54/b7c516be2039a4aabc4fbbc5d0346b9c4d878222346f7b37b85ae3624590/fastrlock-0.8.2-cp312-cp312-macosx_10_15_universal2.whl", hash = "sha256:98195866d3a9949915935d40a88e4f1c166e82e378f622c88025f2938624a90a", size = 55286 },
+    { url = "https://files.pythonhosted.org/packages/21/02/fe8f8e38cb875d1a882ef44bbc181310fde55cdb9046058f150d09c2af9b/fastrlock-0.8.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b22ea9bf5f9fad2b0077e944a7813f91593a4f61adf8faf734a70aed3f2b3a40", size = 50652 },
+    { url = "https://files.pythonhosted.org/packages/3e/ca/16355012a2a5a029a524fd1eb8496eb43190f0e35f623a793ef73e16eb40/fastrlock-0.8.2-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:dcc1bf0ac8a194313cf6e645e300a8a379674ceed8e0b1e910a2de3e3c28989e", size = 52435 },
+    { url = "https://files.pythonhosted.org/packages/e1/a5/a853ca4c0da19d98664ecc36e8104931f63a67e33dd187cb91848783ca94/fastrlock-0.8.2-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:a3dcc876050b8f5cbc0ee84ef1e7f0c1dfe7c148f10098828bc4403683c33f10", size = 51501 },
+    { url = "https://files.pythonhosted.org/packages/10/84/7ee1705e4079f5eb54bf46d3a7eadf5b684fc2a8dce18a1df013c2d41c55/fastrlock-0.8.2-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:685e656048b59d8dfde8c601f188ad53a4d719eb97080cafc8696cda6d75865e", size = 52527 },
+    { url = "https://files.pythonhosted.org/packages/f9/c0/c64e37a5b79966df6110942629dc483ffdeb6062f91afbdb60f848ddfbd1/fastrlock-0.8.2-cp312-cp312-win_amd64.whl", hash = "sha256:fb5363cf0fddd9b50525ddbf64a1e1b28ec4c6dfb28670a940cb1cf988a6786b", size = 30150 },
 ]
 
 [[package]]
@@ -1056,6 +1084,9 @@ backend = [
     { name = "fastapi", extra = ["standard"] },
     { name = "python-fasthtml" },
 ]
+cuda = [
+    { name = "cupy-cuda12x" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -1069,6 +1100,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cupy-cuda12x", marker = "extra == 'cuda'", specifier = ">=13.3.0" },
     { name = "datasets", specifier = ">=3.0.1" },
     { name = "fastapi", extras = ["standard"], marker = "extra == 'backend'", specifier = ">=0.115.0" },
     { name = "ginza", specifier = ">=5.2.0" },

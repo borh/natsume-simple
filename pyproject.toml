@@ -19,13 +19,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# cuda = ["torch==2.5.0", "cupy-cuda12x>=13.3.0"]
 # rocm = ["torch==2.5.0+rocm6.2", "pytorch_triton_rocm==3.1.0", "cupy-rocm-5-0"]
 # apple = ["torch==2.5.0"]
 backend = [
     "fastapi[standard]>=0.115.0",
     "python-fasthtml>=0.8.0",
 ]
+cuda = ["cupy-cuda12x>=13.3.0"]
 
 [tool.uv]
 dev-dependencies = [
@@ -37,7 +37,7 @@ dev-dependencies = [
     "ruff>=0.7.4",
 ]
 
-# TODO
+# TODO Waiting for 0.5.4 to hit nixpkgs
 # https://docs.astral.sh/uv/configuration/indexes/
 [tool.uv.sources]
 # torch = [
