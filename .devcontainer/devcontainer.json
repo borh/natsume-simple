@@ -36,5 +36,5 @@
     },
     "updateContentCommand": "direnv reload",
     "postStartCommand": "direnv allow'",
-    "postCreateCommand": "nix develop --check --impure"
+    "postCreateCommand": "nix develop"
 }
