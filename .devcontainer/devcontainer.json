@@ -36,6 +36,6 @@
     },
     "updateContentCommand": "direnv reload",
     "onCreateCommand": {
-        "direnv-hook": "eval $(direnv hook bash) && direnv allow"
+        "direnv-hook": "'eval $(direnv hook bash) && direnv allow'"
     }
 }
