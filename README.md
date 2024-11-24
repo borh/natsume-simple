@@ -174,14 +174,14 @@ python src/natsume_simple/data.py --load \
 
 ```bash
 # JNLPコーパス用
-python src/natsume_simple/pattern-extraction.py \
+python src/natsume_simple/pattern_extraction.py \
     --model ja_ginza_bert_large \
     --corpus-name "JNLP" \
     data/jnlp-corpus.txt \
     data/jnlp_npvs_ja_ginza_bert_large.csv
 
 # TEDコーパス用
-python src/natsume_simple/pattern-extraction.py \
+python src/natsume_simple/pattern_extraction.py \
     --model ja_ginza_bert_large \
     --corpus-name "TED" \
     data/ted-corpus.txt \
@@ -238,7 +238,7 @@ uv run fastapi dev src/natsume_simple/server.py
 │   └── ted_npvs_*.csv           # TEDコーパスのパターン抽出結果
 │
 ├── notebooks/                   # 分析・可視化用Jupyterノートブック
-│   ├── pattern-extraction.ipynb # パターン抽出処理の開発用
+│   ├── pattern_extraction.ipynb # パターン抽出処理の開発用
 │   └── visualization.ipynb      # データ可視化用
 │
 ├── natsume-frontend/            # Svelteベースのフロントエンド
@@ -251,7 +251,7 @@ uv run fastapi dev src/natsume_simple/server.py
 ├── src/natsume_simple/          # バックエンドPythonパッケージ
 │   ├── server.py                # FastAPIサーバー
 │   ├── data.py                  # データ処理
-│   ├── pattern-extraction.py    # パターン抽出ロジック
+│   ├── pattern_extraction.py    # パターン抽出ロジック
 │   └── utils.py                 # ユーティリティ関数
 │
 ├── scripts/                     # データ準備スクリプト

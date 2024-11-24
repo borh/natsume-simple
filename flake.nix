@@ -167,13 +167,13 @@
           runtimeInputs = runtime-packages;
           text = ''
             ${config.packages.initial-setup}/bin/initial-setup
-            uv run python src/natsume_simple/pattern-extraction.py \
+            uv run python src/natsume_simple/pattern_extraction.py \
                 --input-file data/jnlp-corpus.txt \
                 --data-dir data \
                 --model ja_ginza \
                 --corpus-name "jnlp"
 
-            uv run python src/natsume_simple/pattern-extraction.py \
+            uv run python src/natsume_simple/pattern_extraction.py \
                 --input-file data/ted-corpus.txt \
                 --data-dir data \
                 --model ja_ginza \
