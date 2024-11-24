@@ -1,3 +1,1 @@
-FROM mcr.microsoft.com/devcontainers/base:bullseye
-
-RUN apt-get update && apt-get install -y direnv
+FROM mcr.microsoft.com/devcontainers/base:bookworm
