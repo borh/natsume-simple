@@ -35,7 +35,6 @@
         }
     },
     "updateContentCommand": "direnv reload",
-    "onCreateCommand": {
-        "direnv-hook": "'eval $(direnv hook bash) && direnv allow'"
-    }
+    "postStartCommand": "direnv allow'",
+    "postCreateCommand": "nix develop --check --impure"
 }
