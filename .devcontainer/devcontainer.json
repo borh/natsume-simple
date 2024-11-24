@@ -1,8 +1,5 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
     "name": "natsume-simple",
-    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
     "build": {
         "dockerfile": "Dockerfile"
     },
@@ -10,7 +7,6 @@
         "ghcr.io/devcontainers/features/nix:1": {
             "multiUser": true,
             "version": "latest",
-            // Needed for flakes & nix-direnv:
             "extraNixConfig": "experimental-features = nix-command flakes,keep-outputs = true,keep-derivations = true"
         },
         "ghcr.io/christophermacgown/devcontainer-features/direnv:1": {}
@@ -41,13 +37,7 @@
     "updateContentCommand": "direnv reload",
     "onCreateCommand": {
         "direnv-hook": "eval $(direnv hook bash) && direnv allow"
-    }
-    // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // "forwardPorts": [],
-    // Configure tool-specific properties.
-    // "customizations": {},
-    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-    // "remoteUser": "root"
+    },
     "runArgs": [
         "--userns=keep-id"
     ],
