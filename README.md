@@ -12,7 +12,7 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 
 ### Dev Container を使用する場合
 
-[VSCode](https://code.visualstudio.com/)と[Dev Containers拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールした後：
+[VSCode](https://code.visualstudio.com/)と[Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)及び[GitHub Codespaces](https://marketplace.visualstudio.com/items?itemName=GitHub.codespaces)の拡張機能をインストールした後：
 
 1. このリポジトリをクローン：
 ```bash
