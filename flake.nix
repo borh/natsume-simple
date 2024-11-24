@@ -147,6 +147,7 @@
             runtimeInputs = runtime-packages;
             text = ''
               ${config.packages.initial-setup}/bin/initial-setup
+              nix fmt flake.nix
               uv run ruff format
               uv run ruff check --fix --select I --output-format=github src notebooks tests
               ${pkgs.mypy}/bin/mypy --ignore-missing-imports src
