@@ -37,5 +37,11 @@
     "updateContentCommand": "direnv reload",
     "onCreateCommand": {
         "direnv-hook": "eval $(direnv hook bash) && direnv allow"
+    },
+    "runArgs": [
+        "--userns=keep-id"
+    ],
+    "containerEnv": {
+        "HOME": "/home/vscode"
     }
 }
