@@ -2,9 +2,148 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🚀 Features
+
+- Update to ginza 5.1.3
+- Devenv support
+- Looser deps
+- Initial commit of viz notebook
+- New model data files
+- Reorganize for install clarity
+- Initial rocm work
+- Better requirements per os/env
+- Added apple silicon reqs
+- Upload newest version
+- Lib and cli interface
+- Updated readme to new updated version
+- Init new frontend
+- Added tw config and source maps
+- Working frontend
+- Add backend server
+- More exclusions
+- Script dependencies and cleanup
+- Clean up config and add server
+- Ci
+- New flake
+- Improved shell setup
+- Less deps
+- Docs and tests
+- Ported missing functionality
+- Nix flake-based ci
+- Migrate to flake
+- Align with new content
+- Improve is_japanese and add doctests
+- Add data prep and extraction scripts
+- Direnv support
+- Verb search
+- Add verb search endpoint
+- Fix verb endpoint
+- Per-user envrc
+- Add git-cliff and fix SHELL
+- Switch to newer image and direnv feature; allow rootless mode
+
+### 🐛 Bug Fixes
+
+- Updated deps for multi-os use
+- Further build fixes
+- Looser requirements
+- Further build fixes (2)
+- Try both paths
+- Shell fixes
+- Improved build configuration
+- Correct lemma and norm handling
+- Renamed to align with current models
+- Cuda deps
+- Improve ted corpus preprocessing
+- Updated conda to latest version and added direct requirements.txt use
+- Deps
+- Remove unused dep
+- Script->application
+- Ensure dir exists
+- Actually save files
+- Follow project conventions
+- Script invocation
+- Set zsh as default shell
+- Cli
+- Ensure clean zsh init
+- Ensure clean stty setting to prevent leakage on shell exit
+- Improve default shell and add comment
+- Ensure all corpora are saved with newlines
+- Rename
+
+### 📚 Documentation
+
+- Changelog
+- Fix vscode spelling
+- Fix vscode spelling
+
+### ⚙️ Miscellaneous Tasks
+
+- Typo
+- Update cuda reqs
+- Up
+- Improved docs
+- Cleanup
+- Port frontend to Svelte 5
+- Up and comments
+- Added missing files
+- Update deps; uv rework
+- Up and cleanup
+- Update for newer code
+- Update
+- Try using env vars
+- Update
+- Mypy fixes
+- Cleanup
+- Lint notebooks
+- Remove devenv
+- Cleanup
+- Add basic devcontainer config
+- Do not run nix-command yet to prevent error
+- Add nix-shell configuration
+- Use devenv official image
+- Use simple debian + nix by Microsoft
+- Add dependabot config
+- Add basic nix-flake
+- Fix devcontainer
+- Remove on creation commands
+- Pin Python version
+- Add direnv as features for devcontainer
+- Install direnv by Dockerfile
+- Fix direnv installation
+- Add jupyter plugin to devcontainer
+- Set default Python interpreter for VSCode
+- Cleanup
+- Rename
+- Fix tailwind config import not in Vite allow list
+- Add doctests
+- Up
+- Update files to match current code
+- Align with new content
+- Lint
+- Add ruff to dev deps and sort imports
+- Update and cleanup
+- Add uv comment and added back cuda option
+- Exclude data files and per-user envrc
+- Up
+- Update to reflect current code/random seed
+
 ## [0.2.0] - 2022-11-21
 
-### Bug Fixes
+### 🚀 Features
+
+- Added FastAPI server and Svelte frontent
+- Added corpus download and preprocessing scripts
+- [**breaking**] Improved pattern extraction
+- Added per-model npv extraction results for future comparison
+- Add simple KWIC function to notebook
+- Added tests and inital pdm enablement work
+- Added iwslt2017 dataset to complement existing ted data
+- Separate cuda and electra flags; comments
+
+### 🐛 Bug Fixes
 
 - Lowered minimum Python version bound to 3.7 for Colab use
 - Split into normal and colab notebooks
@@ -21,7 +160,7 @@ All notable changes to this project will be documented in this file.
 - Also unzip file in python script version
 - Improve ted corpus preprocessing
 
-### Documentation
+### 📚 Documentation
 
 - Updated instructions and added deps
 - Google colab info
@@ -32,18 +171,7 @@ All notable changes to this project will be documented in this file.
 - Added initial access info
 - Fixed tree to match initial repo layout
 
-### Features
-
-- Added FastAPI server and Svelte frontent
-- Added corpus download and preprocessing scripts
-- [**breaking**] Improved pattern extraction
-- Added per-model npv extraction results for future comparison
-- Add simple KWIC function to notebook
-- Added tests and inital pdm enablement work
-- Added iwslt2017 dataset to complement existing ted data
-- Separate cuda and electra flags; comments
-
-### Miscellaneous Tasks
+### ⚙️ Miscellaneous Tasks
 
 - Gitignore additions
 - Added missing svelte config file
