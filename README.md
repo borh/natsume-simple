@@ -12,7 +12,7 @@ natsume-simpleは日本語の係り受け関係を検索できるシステム
 
 ### Dev Container を使用する場合
 
-[VSCode](https://code.visualstudio.com/)と[Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)及び[GitHub Codespaces](https://marketplace.visualstudio.com/items?itemName=GitHub.codespaces)の拡張機能をインストールした後：
+[VSCode](https://code.visualstudio.com/)と[Dev Containersの拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールした後：
 
 1. このリポジトリをクローン：
 ```bash
@@ -20,8 +20,14 @@ git clone https://github.com/borh/natsume-simple.git
 ```
 
 2. VSCodeでフォルダを開く
-3. 右下に表示される通知から、もしくはコマンドパレット（F1）から「Dev Containers: Reopen in Container」を選択
+3. 右下に表示される通知から、もしくはコマンドパレット（F1）から「Dev Containers: Reopen in Container」を選択（natsume-simple）
 4. コンテナのビルドが完了すると、必要な開発環境が自動的に設定されます
+
+#### Codespaces
+
+上記はローカルですが、Codespacesで作り、Githubクラウド上の仮想マシンで入ることもできます。
+その場合は、Github上の「Code」ボタンから「Codespaces」を選択し、「Create codespace on main」でブラウザ経由でDev Containerに入れます。
+また、同じことはVSCode内の[GitHub Codespaces](https://marketplace.visualstudio.com/items?itemName=GitHub.codespaces)拡張機能でもできます。
 
 ### Nixを使用する場合
 
@@ -189,7 +195,7 @@ python src/natsume_simple/pattern_extraction.py \
 ```
 
 オプション：
-- `--model NAME` - 使用するspaCyモデル（オプション、デフォルト: ja_ginza_bert_large）
+- `--model NAME` - 使用するspaCyモデル（オプション、デフォルト: `ja_ginza_bert_large`）
 - `--corpus-name NAME` - コーパス名の指定（デフォルト: "Unknown"）
 - `--seed INT` - 乱数シードの設定（デフォルト: 42）
 
@@ -311,7 +317,9 @@ Svelteの使用にはnodejsの環境整備が必要になる。
 上記の`npm run build`コマンド実行で`static/`下にフロントエンドのファイルが作成される。
 ここに置かれるものは基本的にAPIの`static/`URL下で同一ファイル名でアクセス可能。
 
-## モデルの使用（Pythonコードから）
+# 開発向け情報
+
+## GiNZA/spaCyのモデル使用（Pythonコードから）
 
 係り受け解析に使用されるモデルを利用するために以下のようにloadする必要がある。
 環境設定が正常かどうかも以下のコードで検証できる。
@@ -328,35 +336,8 @@ import spacy
 nlp = spacy.load('ja_ginza')
 ```
 
-ノートブックでは，優先的に`ja_ginza_bert_large`を使用するが，インストールされていない場合は`ja_ginza`を使用する。
+notebooksにあるノートブックでは，優先的に`ja_ginza_bert_large`を使用するが，インストールされていない場合は`ja_ginza`を使用する。
 
-## データ・コーパスの生成スクリプト（古い）
+## ノートブックからのプログラム改良
 
-現在はデータが`notebooks`下にあるJupyter Notebookによって生成される。
-その結果が`data`に保存される。
-
-結果はモデルによって異なるとしてファイル名の末尾にモデル名も記載されている。
-
-それぞれの依存パッケージ定義ファイルでは，Jupyterのカーネルは定義されていない。
-必要な場合は別途インストールください（VSCodeでは自動でインストールできる）。
-
-## scripts (古い)
-
-（上記の`data.py`に移行してあるのここは参考まで）
-
-定めた手順で，コーパスの前処理・データ整理などを行う。
-ここでは，Hugginface Datasets以外のコーパスを扱う。
-Huggingface Datasetsの方は，直接ノートブックで読み取っている。
-
-注意：`scripts/`に置かれているBashスクリプト（.sh拡張子）はbash, awk, GNU grep, wgetなどを必要とするので，Windowsから実行するときはその環境整備が必要になる。
-また，$\LaTeX$からGiNZAで読み取れる形式に変換するプログラムとして[pandoc](https://pandoc.org/)を使っているため，[pandocのインストール](https://pandoc.org/installing.html)は別途必要になる。
-
-一回ダウンロードしたあとに再度ダウンロードせずに前処理課程を修正できるため，スクリプトはデータ処理をダウンロードと変換に分けている。
-
-```bash
-./get_jnlp_corpus.sh
-./convert_jnlp_corpus.sh
-```
-
-並行して，Bashスクリプトと同様な処理を行うPythonスクリプトもある。
-変換処理では，無作為にコーパス全体から3,000文を抽出しているために，
+プロジェクト環境内でノートブックを作れば，`from natsume_simple.pattern_extraction import normalize_verb_span`など個別に関数をインポートし，動的にテストすることができる。
