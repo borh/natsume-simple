@@ -72,6 +72,7 @@
             flake-checker.enable = true;
             ruff.enable = true;
             ruff-format.enable = true;
+            biome.enable = true;
           };
 
           devShells = {
@@ -100,9 +101,9 @@
                   ${config.pre-commit.installationScript}
                   # Resetting tty settings prevents issues after exiting the shell
                   ${pkgs.coreutils}/bin/stty sane
-                  export TERM="xterm-256color"
-                  export LANG="en_US.UTF-8"
-                  export LC_ALL="en_US.UTF-8"
+                  # export TERM="xterm-256color"
+                  # export LANG="en_US.UTF-8"
+                  # export LC_ALL="en_US.UTF-8"
                   # Set up shell and prompt
                   export SHELL=${pkgs.bashInteractive}/bin/bash
                   export PS1='(uv) \[\e[34m\]\w\[\e[0m\] $(if [[ $? == 0 ]]; then echo -e "\[\e[32m\]"; else echo -e "\[\e[31m\]"; fi)#\[\e[0m\] '
@@ -111,6 +112,8 @@
                     PATH="${path-string}:$PATH"
                   fi
                   export PATH
+
+                  eval "$(direnv hook bash)"
 
                   # Set up Python and dependencies
                   ${config.packages.initial-setup}/bin/initial-setup
