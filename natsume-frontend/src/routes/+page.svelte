@@ -33,21 +33,7 @@
 		return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 	}
 
-	type Result = {
-		n?: string;
-		v: string;
-		frequency: number;
-		corpus: string;
-		p: string;
-		contributions?: { corpus: string; frequency: number }[];
-	};
-
-	type CombinedResult = {
-		v: string;
-		frequency: number;
-		contributions: { corpus: string; frequency: number }[];
-		p: string;
-	};
+	import type { Result, CombinedResult } from '$lib/query';
 
 	let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 	let particles = ['が', 'を', 'に', 'で', 'から', 'より', 'と', 'へ'];
