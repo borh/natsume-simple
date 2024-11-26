@@ -2,13 +2,13 @@
 	import type { Writable } from 'svelte/store';
 
 	let {
-		searchType = $bindable('noun'),
-		searchTerm,
+		searchType = $bindable(),
+		searchTerm = $bindable(),
 		performSearch,
 		isLoading
 	}: {
 		searchType: 'verb' | 'noun';
-		searchTerm: Writable<string>;
+		searchTerm: string;
 		performSearch: () => void;
 		isLoading: Writable<boolean>;
 	} = $props();
@@ -27,7 +27,7 @@
 		class="text-lg p-1 border rounded mr-2 h-8 w-40 sm:w-auto dark:bg-gray-700 dark:text-white dark:border-gray-600"
 		id="search-input"
 		name="search-input"
-		bind:value={$searchTerm}
+		bind:value={searchTerm}
 		onkeypress={(e) => {
 			if (e.key === 'Enter') performSearch();
 		}}

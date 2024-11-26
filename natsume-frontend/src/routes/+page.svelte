@@ -4,15 +4,13 @@
 	import Options from '$lib/menus/Options.svelte';
 	import Stats from '$lib/menus/Stats.svelte';
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte';
-	
+
 	import { onMount, tick, afterUpdate } from 'svelte';
 	import { writable, derived, type Writable } from 'svelte/store';
 	import './../tailwind.css';
 	import resolveConfig from 'tailwindcss/resolveConfig';
 	import tailwindConfig from '../../tailwind.config.js';
 	import Loading from '$lib/Loading.svelte';
-
-	let searchType: 'verb' | 'noun' = 'noun'; // Default searchtype
 
 	const twFullConfig = resolveConfig(tailwindConfig);
 
@@ -42,7 +40,9 @@
 	let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 	let particles = ['が', 'を', 'に', 'で', 'から', 'より', 'と', 'へ'];
 	let results = writable<Result[]>([]);
-	let searchTerm = writable('時間');
+
+	let searchType: 'verb' | 'noun' = 'noun';
+	let searchTerm: string = '時間';
 
 	let lastSearchedNoun = writable('');
 	let corpusNorm: Record<string, number> = {};
@@ -353,16 +353,15 @@
 	}
 
 	async function performSearch(): Promise<void> {
-
-		console.log({ d: $d })
-		console.log("performSearch")
+		console.log({ d: $d });
+		console.log('performSearch');
 		try {
 			isLoading.set(true); // Set loading state
 			const startTime = performance.now();
 
 			// Construct API endpoint based on search type
 			const endpoint =
-				searchType === 'verb' ? `/npv/verb/${$searchTerm}` : `/npv/noun/${$searchTerm}`;
+				searchType === 'verb' ? `/npv/verb/${searchTerm}` : `/npv/noun/${searchTerm}`;
 			const response = await fetch(`${apiUrl}${endpoint}`);
 			const data = await response.json();
 
@@ -370,11 +369,11 @@
 			searchElapsedTime.set((endTime - startTime) / 1000); // Calculate elapsed time
 			results.set(data as Result[]);
 			resultCount.set(data.length);
-			lastSearchedNoun.set($searchTerm); // Update the last searched term
+			lastSearchedNoun.set(searchTerm); // Update the last searched term
 
 			await updateDerivedData(); // Update derived data
 
-			console.log({ d: $d })
+			console.log({ d: $d });
 		} catch (error) {
 			console.error('Error fetching results:', error);
 		} finally {
@@ -554,7 +553,7 @@
 		<div class="container mx-auto flex flex-wrap justify-between items-center">
 			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-4">Natsume Simple</h1>
 			<div class="flex-1 flex justify-center items-center space-x-2">
-				<Search {searchTerm} {performSearch} {isLoading} bind:searchType />
+				<Search bind:searchTerm {performSearch} {isLoading} bind:searchType />
 			</div>
 			<div class="relative inline-block text-left">
 				<div class="flex space-x-2">
@@ -679,9 +678,9 @@
 						{:else}
 							<p class="text-center text-gray-600 mt-4">
 								{#if $results.length > 0}
-									Showing results for {searchType === 'verb' ? 'Verb' : 'Noun'}: "{$searchTerm}"
+									Showing results for {searchType === 'verb' ? 'Verb' : 'Noun'}: "{searchTerm}"
 								{:else}
-									No results found for {searchType === 'verb' ? 'Verb' : 'Noun'}: "{$searchTerm}"
+									No results found for {searchType === 'verb' ? 'Verb' : 'Noun'}: "{searchTerm}"
 								{/if}
 							</p>
 						{/if}
