@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CollocationList from '$lib/CollocationList.svelte';
 	import Search from '$lib/Search.svelte';
+	import Options from '$lib/menus/Options.svelte';
 
 	import { onMount, tick, afterUpdate } from 'svelte';
 	import { writable, derived, type Writable } from 'svelte/store';
@@ -610,70 +611,16 @@
 						</div>
 					</div>
 				{/if}
-
 				{#if optionsDropdownOpen}
-					<div
-						id="options-dropdown"
-						class="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-30"
-					>
-						<div class="py-1">
-							<!-- Existing Options -->
-							<div class="px-4 py-2">
-								<label class="flex items-center mb-2">
-									<input
-										type="checkbox"
-										id="use-normalization"
-										name="use-normalization"
-										checked={$useNormalization}
-										on:change={() => {
-											$useNormalization = !$useNormalization;
-											handleCheckboxChange();
-										}}
-										class="mr-2"
-									/>
-									<span class="dark:text-gray-300">Use Corpus Normalization</span>
-								</label>
-								<label class="flex items-center mb-2">
-									<input
-										type="checkbox"
-										id="combined-search"
-										name="combined-search"
-										checked={$combinedSearch}
-										on:change={() => {
-											$combinedSearch = !$combinedSearch;
-											handleCheckboxChange();
-										}}
-										class="mr-2"
-									/>
-									<span class="dark:text-gray-300">Combined Search</span>
-								</label>
-								<div class="mt-2">
-									<span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-										>Corpus Selection</span
-									>
-									{#each Object.keys(corpusNorm) as corpus}
-										<label
-											class="flex items-center mb-2 px-2 py-1 rounded border-2"
-											style="border-color: {getSolidColor(corpus)}; background-color: {getColor(
-												corpus
-											)}"
-										>
-											<input
-												type="checkbox"
-												id="corpus-{corpus}"
-												name="corpus-{corpus}"
-												bind:group={$selectedCorpora}
-												value={corpus}
-												on:change={handleCheckboxChange}
-												class="mr-2"
-											/>
-											<span class="dark:text-white">{corpus}</span>
-										</label>
-									{/each}
-								</div>
-							</div>
-						</div>
-					</div>
+					<Options
+						{useNormalization}
+						{combinedSearch}
+						{selectedCorpora}
+						{getColor}
+						{getSolidColor}
+						{corpusNorm}
+						{handleCheckboxChange}
+					/>
 				{/if}
 			</div>
 			<button
