@@ -555,7 +555,7 @@
 		class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 z-20"
 	>
 		<div class="container mx-auto flex flex-wrap justify-between items-center">
-			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-4">Natsuma Komima Simple</h1>
+			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-4">Natsume Simple</h1>
 			<div class="flex-1 flex justify-center items-center space-x-2">
 				<Search {searchTerm} {performSearch} {isLoading} />
 			</div>
