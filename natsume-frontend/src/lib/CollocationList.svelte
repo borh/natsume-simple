@@ -42,6 +42,27 @@
 	} = $props();
 </script>
 
+{#snippet frequencyBar(collocate: Result | CombinedResult)}
+	<svg width="50" height="20" class="mr-2">
+		{#if !$combinedSearch}
+			{#each renderContributions(collocate as Result, collocates, $selectedCorpora, $useNormalization) as { corpus, width, xOffset, value }}
+				<rect style="fill: {getSolidColor(corpus)}" height="20" width="{width}%" x="{xOffset}%" />
+			{/each}
+		{:else}
+			{#each renderContributionsCombined(collocate as CombinedResult, collocates, $selectedCorpora, $useNormalization) as { corpus, width, xOffset, value }}
+				<rect style="fill: {getSolidColor(corpus)}" height="20" width="{width}%" x="{xOffset}%" />
+			{/each}
+		{/if}
+	</svg>
+{/snippet}
+
+{#snippet collocationContent(collocate: Result)}
+	<span class="text-left font-medium">{collocate.n}{collocate.v}</span>
+	{#if !$combinedSearch}
+		<span class="text-sm text-gray-600 dark:text-gray-200 ml-2 text-left">{collocate.corpus}</span>
+	{/if}
+{/snippet}
+
 <ul class="list-none p-0 space-y-0 mt-2">
 	{#each collocates as collocate}
 		<li
@@ -68,33 +89,8 @@
 				useNormalization: $useNormalization
 			}}
 		>
-			<svg width="50" height="20" class="mr-2">
-				{#if !$combinedSearch}
-					{#each renderContributions(collocate, collocates, $selectedCorpora, $useNormalization) as { corpus, width, xOffset, value }}
-						<rect
-							style="fill: {getSolidColor(corpus)}"
-							height="20"
-							width="{width}%"
-							x="{xOffset}%"
-						/>
-					{/each}
-				{:else}
-					{#each renderContributionsCombined(collocate as CombinedResult, collocates, $selectedCorpora, $useNormalization) as { corpus, width, xOffset, value }}
-						<rect
-							style="fill: {getSolidColor(corpus)}"
-							height="20"
-							width="{width}%"
-							x="{xOffset}%"
-						/>
-					{/each}
-				{/if}
-			</svg>
-			<span class="text-left font-medium">{collocate.n}{collocate.v}</span>
-			{#if !$combinedSearch}
-				<span class="text-sm text-gray-600 dark:text-gray-200 ml-2 text-left"
-					>{collocate.corpus}</span
-				>
-			{/if}
+			{@render frequencyBar(collocate)}
+			{@render collocationContent(collocate)}
 		</li>
 	{/each}
 </ul>
