@@ -90,6 +90,7 @@
                       prepare-data
                       extract-patterns
                       build-frontend
+                      watch-frontend
                       dev-server
                       server
                       run-all
@@ -162,6 +163,14 @@
             text = ''
               ${config.packages.initial-setup}/bin/initial-setup
               cd natsume-frontend && npm i && npm run build && cd ..
+            '';
+          };
+          packages.watch-frontend = pkgs.writeShellApplication {
+            name = "watch-frontend";
+            runtimeInputs = runtime-packages;
+            text = ''
+              ${config.packages.initial-setup}/bin/initial-setup
+              cd natsume-frontend && npm i && npm run dev && cd ..
             '';
           };
           packages.dev-server = pkgs.writeShellApplication {
