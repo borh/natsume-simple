@@ -6,6 +6,7 @@
 	import './../tailwind.css';
 	import resolveConfig from 'tailwindcss/resolveConfig';
 	import tailwindConfig from '../../tailwind.config.js';
+	import Loading from '$lib/Loading.svelte';
 
 	let searchType = 'noun'; // Default searchtype
 
@@ -864,13 +865,7 @@
 </div>
 
 {#if $isLoading}
-	<div
-		class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50"
-	>
-		<div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
-			<p class="text-lg font-semibold dark:text-white">Loading...</p>
-		</div>
-	</div>
+	<Loading />
 {/if}
 
 <div
