@@ -12,7 +12,7 @@
 	import tailwindConfig from '../../tailwind.config.js';
 	import Loading from '$lib/Loading.svelte';
 
-	let searchType = 'noun'; // Default searchtype
+	let searchType: 'verb' | 'noun' = 'noun'; // Default searchtype
 
 	const twFullConfig = resolveConfig(tailwindConfig);
 
@@ -353,6 +353,9 @@
 	}
 
 	async function performSearch(): Promise<void> {
+
+		console.log({ d: $d })
+		console.log("performSearch")
 		try {
 			isLoading.set(true); // Set loading state
 			const startTime = performance.now();
@@ -370,6 +373,8 @@
 			lastSearchedNoun.set($searchTerm); // Update the last searched term
 
 			await updateDerivedData(); // Update derived data
+
+			console.log({ d: $d })
 		} catch (error) {
 			console.error('Error fetching results:', error);
 		} finally {
@@ -549,7 +554,7 @@
 		<div class="container mx-auto flex flex-wrap justify-between items-center">
 			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-4">Natsume Simple</h1>
 			<div class="flex-1 flex justify-center items-center space-x-2">
-				<Search {searchTerm} {performSearch} {isLoading} />
+				<Search {searchTerm} {performSearch} {isLoading} bind:searchType />
 			</div>
 			<div class="relative inline-block text-left">
 				<div class="flex space-x-2">

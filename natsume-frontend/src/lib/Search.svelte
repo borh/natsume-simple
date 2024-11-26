@@ -1,9 +1,13 @@
 <script lang="ts">
-	import type { Writable } from "svelte/store";
+	import type { Writable } from 'svelte/store';
 
-	let searchType: 'verb' | 'noun' = $state('noun');
-
-	let { searchTerm, performSearch, isLoading }: {
+	let {
+		searchType = $bindable('noun'),
+		searchTerm,
+		performSearch,
+		isLoading
+	}: {
+		searchType: 'verb' | 'noun';
 		searchTerm: Writable<string>;
 		performSearch: () => void;
 		isLoading: Writable<boolean>;
