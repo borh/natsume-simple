@@ -10,7 +10,7 @@
 		searchType: 'verb' | 'noun';
 		searchTerm: string;
 		performSearch: () => void;
-		isLoading: Writable<boolean>;
+		isLoading: boolean;
 	} = $props();
 </script>
 
@@ -36,8 +36,8 @@
 	<button
 		class="bg-red-700 hover:bg-red-500 text-white font-bold py-1 px-2 rounded h-8 text-sm dark:bg-red-600 dark:hover:bg-red-500"
 		onclick={performSearch}
-		disabled={$isLoading}
+		disabled={isLoading}
 	>
-		{$isLoading ? 'Searching...' : 'Search'}
+		{isLoading ? 'Searching...' : 'Search'}
 	</button>
 </div>

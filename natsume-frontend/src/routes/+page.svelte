@@ -52,9 +52,10 @@
 	let selectedCorpora = writable<string[]>([]);
 	let combinedSearch = writable(false);
 	let searchElapsedTime = writable(0);
-	let isLoading = writable(false);
 	let statsDropdownOpen = false;
 	let optionsDropdownOpen = false;
+
+	let isLoading: boolean = false;
 
 	const d: Writable<Record<string, Result[]>> = writable({});
 
@@ -347,16 +348,16 @@
 	}
 
 	async function handleCheckboxChange() {
-		isLoading.set(true);
+		isLoading = true;
 		await updateDerivedData();
-		isLoading.set(false);
+		isLoading = false;
 	}
 
 	async function performSearch(): Promise<void> {
 		console.log({ d: $d });
 		console.log('performSearch');
 		try {
-			isLoading.set(true); // Set loading state
+			isLoading = true; // Set loading state
 			const startTime = performance.now();
 
 			// Construct API endpoint based on search type
@@ -377,7 +378,7 @@
 		} catch (error) {
 			console.error('Error fetching results:', error);
 		} finally {
-			isLoading.set(false); // Turn off loading state
+			isLoading = false; // Turn off loading state
 		}
 	}
 
@@ -694,7 +695,7 @@
 	</main>
 </div>
 
-{#if $isLoading}
+{#if isLoading}
 	<Loading />
 {/if}
 
