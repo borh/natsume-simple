@@ -2,7 +2,7 @@
 	import Search from '../lib/Search.svelte';
 
 	import { onMount, tick, afterUpdate } from 'svelte';
-	import { writable, derived } from 'svelte/store';
+	import { writable, derived, type Writable } from 'svelte/store';
 	import './../tailwind.css';
 	import resolveConfig from 'tailwindcss/resolveConfig';
 	import tailwindConfig from '../../tailwind.config.js';
@@ -34,6 +34,7 @@
 	}
 
 	type Result = {
+		n?: string;
 		v: string;
 		frequency: number;
 		corpus: string;
@@ -65,7 +66,7 @@
 	let statsDropdownOpen = false;
 	let optionsDropdownOpen = false;
 
-	const d = writable({});
+	const d: Writable<Record<string, Result[]>> = writable({});
 
 	const filteredResultCount = derived([d, selectedCorpora], ([$d, $selectedCorpora]) => {
 		if (!$d || Object.keys($d).length === 0) return 0;
@@ -351,7 +352,7 @@
 			$selectedCorpora,
 			$combinedSearch
 		);
-		d.set(derivedData);
+		d.set(derivedData as Record<string, Result[]>);
 		await tick(); // Wait for the next DOM update
 	}
 
@@ -789,7 +790,7 @@
 														getTooltipData: () => {
 															const tooltipData: Record<string, number> = {};
 															if ($combinedSearch) {
-																collocate.contributions.forEach(
+																collocate.contributions?.forEach(
 																	({
 																		corpus,
 																		frequency
@@ -823,7 +824,7 @@
 																/>
 															{/each}
 														{:else}
-															{#each renderContributionsCombined(collocate, collocates, $selectedCorpora, $useNormalization) as { corpus, width, xOffset, value }}
+															{#each renderContributionsCombined(collocate as CombinedResult, collocates, $selectedCorpora, $useNormalization) as { corpus, width, xOffset, value }}
 																<rect
 																	style="fill: {getSolidColor(corpus)}"
 																	height="20"
