@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Search from '../lib/Search.svelte';
+
 	import { onMount, tick, afterUpdate } from 'svelte';
 	import { writable, derived } from 'svelte/store';
 	import './../tailwind.css';
@@ -553,35 +555,9 @@
 		class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 z-20"
 	>
 		<div class="container mx-auto flex flex-wrap justify-between items-center">
-			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-4">Natsume Simple</h1>
+			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-4">Natsuma Komima Simple</h1>
 			<div class="flex-1 flex justify-center items-center space-x-2">
-				<div class="flex items-center space-x-1">
-					<!-- Select searching pattern -->
-					<select
-						class="border rounded h-8 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-						bind:value={searchType}
-					>
-						<option value="verb">Verb(Noun-Particle-Verb)</option>
-						<option value="noun">Noun(Noun-Particle-Verb)</option>
-					</select>
-					<input
-						class="text-lg p-1 border rounded mr-2 h-8 w-40 sm:w-auto dark:bg-gray-700 dark:text-white dark:border-gray-600"
-						id="search-input"
-						name="search-input"
-						bind:value={$searchTerm}
-						on:keypress={(e) => {
-							if (e.key === 'Enter') performSearch();
-						}}
-						placeholder={searchType === 'verb' ? 'Search Verb' : 'Search Noun'}
-					/>
-					<button
-						class="bg-red-700 hover:bg-red-500 text-white font-bold py-1 px-2 rounded h-8 text-sm dark:bg-red-600 dark:hover:bg-red-500"
-						on:click={performSearch}
-						disabled={$isLoading}
-					>
-						{$isLoading ? 'Searching...' : 'Search'}
-					</button>
-				</div>
+				<Search {searchTerm} {performSearch} {isLoading} />
 			</div>
 			<div class="relative inline-block text-left">
 				<div class="flex space-x-2">
