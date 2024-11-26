@@ -1,12 +1,13 @@
+import argparse
+import random
 import subprocess
 import urllib.request
 import zipfile
 from pathlib import Path
-from typing import List, Iterator, Tuple
-import random
-import argparse
+from typing import Iterator, List, Tuple
 
 import datasets  # type: ignore
+
 from natsume_simple.log import setup_logger
 from natsume_simple.utils import set_random_seed
 
@@ -108,6 +109,9 @@ def is_japanese(line: str, min_length: int = 200) -> bool:
     """
     line = line.strip()
 
+    if not line:
+        return False
+
     def is_japanese_char(c: str) -> bool:
         code = ord(c)
         return any(
@@ -148,12 +152,13 @@ def filter_non_japanese(dir: Path, min_length: int = 200) -> Iterator[str]:
         min_length: Minimum length of lines to keep (default: 200)
 
     Yields:
-        Lines of text that pass the Japanese text filters
+        Lines of text that pass the Japanese text filters, stripped of whitespace on the end
     """
     files = dir.rglob("*.txt")
     for file in files:
         with open(file, encoding="utf-8", errors="replace") as f:
             for line in f:
+                line = line.rstrip()
                 if is_japanese(line, min_length):
                     yield line
 
@@ -179,7 +184,8 @@ def prepare_jnlp_corpus(data_dir: Path) -> int:
 
     output_file = data_dir / "jnlp-corpus.txt"
     with open(output_file, "w", encoding="utf-8") as f:
-        f.writelines(lines)
+        for line in lines:
+            f.write(f"{line}\n")
 
     logger.info(f"JNLP corpus saved to {output_file}")
     return len(lines)
@@ -192,7 +198,7 @@ def get_ted_corpus() -> List[str]:
     combining data from 2014-2017.
 
     Returns:
-        List of Japanese sentences from TED talks
+        List of Japanese sentences from TED talks, stripped of whitespace
     """
     logger.info("Downloading TED corpus...")
 
@@ -213,10 +219,10 @@ def get_ted_corpus() -> List[str]:
     )
 
     ted_corpus: List[str] = (
-        [d["ja"] for d in ted_dataset_2014["train"]["translation"]]
-        + [d["ja"] for d in ted_dataset_2015["train"]["translation"]]
-        + [d["ja"] for d in ted_dataset_2016["train"]["translation"]]
-        + [d["ja"] for d in ted_dataset_2017jaen["train"]["translation"]]
+        [d["ja"].rstrip() for d in ted_dataset_2014["train"]["translation"]]
+        + [d["ja"].rstrip() for d in ted_dataset_2015["train"]["translation"]]
+        + [d["ja"].rstrip() for d in ted_dataset_2016["train"]["translation"]]
+        + [d["ja"].rstrip() for d in ted_dataset_2017jaen["train"]["translation"]]
     )
 
     return ted_corpus
@@ -228,11 +234,12 @@ def save_corpus(data_dir: Path, corpus_name: str, corpus: List[str]) -> None:
     Args:
         data_dir: Directory to save the corpus file
         corpus_name: Name of the corpus (e.g., 'jnlp', 'ted')
-        corpus: List of corpus lines to save
+        corpus: List of corpus lines to save (assumed to not have newline at end)
     """
     output_file = data_dir / f"{corpus_name}-corpus.txt"
     with open(output_file, "w", encoding="utf-8") as f:
-        f.writelines(corpus)
+        for line in corpus:
+            f.write(f"{line}\n")
     logger.info(f"Sampled {corpus_name} corpus saved to {output_file}")
 
 

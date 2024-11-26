@@ -5,11 +5,12 @@
 # ]
 # ///
 
-from fastapi import FastAPI  # type: ignore
-from fastapi.staticfiles import StaticFiles  # type: ignore
-from fastapi.middleware.cors import CORSMiddleware  # type: ignore
+from typing import Any, Dict, List
+
 import polars as pl  # type: ignore
-from typing import Dict, List, Any
+from fastapi import FastAPI  # type: ignore
+from fastapi.middleware.cors import CORSMiddleware  # type: ignore
+from fastapi.staticfiles import StaticFiles  # type: ignore
 
 app = FastAPI()
 
@@ -72,9 +73,11 @@ def read_npv_noun(noun: str) -> List[Dict[str, Any]]:
     matches = db.filter(pl.col("n") == noun).drop("n").to_dicts()
     return matches
 
+
 @app.get("/npv/verb/{verb}")
 def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
     matches = db.filter(pl.col("v") == verb).drop("v").to_dicts()
     return matches
+
 
 app.mount("/", StaticFiles(directory="natsume-frontend/build", html=True), name="app")

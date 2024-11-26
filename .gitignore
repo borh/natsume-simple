@@ -293,7 +293,13 @@ devenv.local.nix
 # Frontend build
 natsume-frontend/build/
 
+# Data files
+
+data/*.txt
+data/NLP_LATEX_CORPUS*
+
 # Environment files
 .env
 .env.*
 !.env.example
+.envrc.*

@@ -1,28 +1,30 @@
-import spacy  # type: ignore
+import argparse
+import re
+from collections.abc import Iterator
+from itertools import chain, takewhile, tee
+from pathlib import Path
+from typing import Any, Iterable, List, Optional, Tuple
+
 import ginza  # type: ignore
 import polars as pl  # type: ignore
-from spacy.tokens import Doc, Token, Span  # type: ignore
+import spacy  # type: ignore
 import torch  # type: ignore
 from spacy.symbols import (  # type: ignore
-    NOUN,
-    PROPN,
-    PRON,
-    NUM,
-    VERB,
-    SYM,
-    PUNCT,
     ADP,
+    NOUN,
+    NUM,
+    PRON,
+    PROPN,
+    PUNCT,
     SCONJ,
+    SYM,
+    VERB,
+    nsubj,
     obj,
     obl,
-    nsubj,
 )
-from typing import List, Tuple, Optional, Iterable, Any
-import re
-from pathlib import Path
-from itertools import chain, takewhile, tee
-from collections.abc import Iterator
-import argparse
+from spacy.tokens import Doc, Span, Token  # type: ignore
+
 from natsume_simple.log import setup_logger
 from natsume_simple.utils import set_random_seed
 
@@ -282,9 +284,14 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract NPV patterns from a corpus.")
-    parser.add_argument("input_file", type=Path, help="Path to the input corpus file")
     parser.add_argument(
-        "data_dir", type=Path, help="Directory to save the output CSV file"
+        "--input-file", type=Path, required=True, help="Path to the input corpus file"
+    )
+    parser.add_argument(
+        "--data-dir",
+        type=Path,
+        required=True,
+        help="Directory to save the output CSV file",
     )
     parser.add_argument("--model", type=str, help="Name of the spaCy model to use")
     parser.add_argument(
@@ -302,4 +309,4 @@ if __name__ == "__main__":
     set_random_seed(args.seed)
     logger.info(f"Random seed set to {args.seed}")
 
-    main(args.input_file, args.output_file, args.model, args.corpus_name)
+    main(args.input_file, args.data_dir, args.model, args.corpus_name)
