@@ -795,10 +795,4 @@
 	.relative {
 		position: relative;
 	}
-
-	#stats-dropdown,
-	#options-dropdown {
-		max-height: calc(100vh - 100px);
-		overflow-y: auto;
-	}
 </style>
