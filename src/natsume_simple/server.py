@@ -79,5 +79,43 @@ def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
     matches = db.filter(pl.col("v") == verb).drop("v").to_dicts()
     return matches
 
+# @app.get("/search/{query}")
+# def read_query(query:str) -> List[tuple[str, str]]:
+#     matches = db.select(
+#         pl.col('n').str.starts_with(query),
+#         pl.col('frequency')
+#     ).sort('frequency', descending=True).itertuples()
+
+#     return matches
+
+#     # str.startswith
+#     # [("aa", "v"), ("ab", "n"), (...)]
+
+
+@app.get("/search/{query}")
+def read_query(query: str) -> List[tuple[str, str]]:
+    # Filter rows containing the query
+    matches = (
+        db.filter(pl.col("n").str.contains(query) | pl.col("v").str.contains(query))  # Filter rows where `query` is in either `n` or `v` column
+          .select(["n", "v"])  # Select only the `n` and `v` columns
+          .to_dicts()  # Convert the result to a list of dictionaries
+    )
+    
+    # Initialize the result list
+    result = []
+    
+    # Iterate through the filtered results
+    for row in matches:
+        # If the query exists in the `n` column, add it to the result list
+        if query in row["n"]:
+            result.append((row["n"], "n"))
+        # If the query exists in the `v` column, add it to the result list
+        if query in row["v"]:
+            result.append((row["v"], "v"))
+    
+    return result
+
+
+
 
 app.mount("/", StaticFiles(directory="natsume-frontend/build", html=True), name="app")
