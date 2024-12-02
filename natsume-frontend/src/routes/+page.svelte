@@ -548,73 +548,84 @@
 
 <div class="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 	<!-- Fixed top header with search bar and info dropdown -->
-	<header
-		class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 z-20"
-	>
-		<div class="container mx-auto flex flex-nowrap justify-between items-center">
-			<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap">
-				Natsume Simple
-			</h1>
-			<div class="flex-1 flex justify-center items-center space-x-2">
+	<header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 z-20">
+		<div
+			class="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center space-y-2 md:space-y-0"
+		>
+			<div class="flex justify-center">
+				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap">
+					Natsume Simple
+				</h1>
+			</div>
+
+			<div class="flex justify-center">
 				<Search bind:searchTerm {performSearch} {isLoading} bind:searchType />
 			</div>
-			<div class="relative inline-block text-left">
-				<div class="flex space-x-2">
-					<button
-						id="stats-button"
-						class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
-						on:click={() => (statsDropdownOpen = !statsDropdownOpen)}
-					>
-						<span>Stats</span>
-						<svg
-							class="fill-current h-4 w-4 ml-1"
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 20 20"
+
+			<div class="flex justify-center items-center space-x-2">
+				<div class="relative inline-block text-left">
+					<div class="flex space-x-2">
+						<button
+							id="stats-button"
+							class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							on:click={() => (statsDropdownOpen = !statsDropdownOpen)}
 						>
-							<path
-								d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-							/>
-						</svg>
-					</button>
-					<button
-						id="options-button"
-						class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
-						on:click={() => (optionsDropdownOpen = !optionsDropdownOpen)}
-					>
-						<span>Options</span>
-						<svg
-							class="fill-current h-4 w-4 ml-1"
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 20 20"
+							<span>Stats</span>
+							<svg
+								class="fill-current h-4 w-4 ml-1"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 20 20"
+							>
+								<path
+									d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+								/>
+							</svg>
+						</button>
+						<button
+							id="options-button"
+							class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							on:click={() => (optionsDropdownOpen = !optionsDropdownOpen)}
 						>
-							<path
-								d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-							/>
-						</svg>
-					</button>
+							<span>Options</span>
+							<svg
+								class="fill-current h-4 w-4 ml-1"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 20 20"
+							>
+								<path
+									d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+								/>
+							</svg>
+						</button>
+					</div>
+					{#if statsDropdownOpen}
+						<div
+							id="stats-dropdown"
+							class="origin-top-right absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-30"
+						>
+							<Stats {corpusNorm} {filteredResultCount} {searchElapsedTime} {formatNumber} />
+						</div>
+					{/if}
+					{#if optionsDropdownOpen}
+						<Options
+							{useNormalization}
+							{combinedSearch}
+							{selectedCorpora}
+							{getColor}
+							{getSolidColor}
+							{corpusNorm}
+							{handleCheckboxChange}
+						/>
+					{/if}
 				</div>
-				{#if statsDropdownOpen}
-					<Stats {corpusNorm} {filteredResultCount} {searchElapsedTime} {formatNumber} />
-				{/if}
-				{#if optionsDropdownOpen}
-					<Options
-						{useNormalization}
-						{combinedSearch}
-						{selectedCorpora}
-						{getColor}
-						{getSolidColor}
-						{corpusNorm}
-						{handleCheckboxChange}
-					/>
-				{/if}
+				<ThemeSwitch {toggleDarkMode} {darkMode} />
 			</div>
-			<ThemeSwitch {toggleDarkMode} {darkMode} />
 		</div>
 	</header>
 
 	<!-- Sticky particles header -->
 	<header
-		class="sticky top-12 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-10"
+		class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 z-20"
 	>
 		<div
 			class="container mx-auto p-0 overflow-x-auto hide-scrollbar"
@@ -646,7 +657,7 @@
 	</header>
 
 	<!-- Main content area -->
-	<main class="flex-1 overflow-y-auto pt-12">
+	<main class="flex-1 pt-4">
 		<div class="container mx-auto p-0">
 			<div class="relative">
 				<button class="scroll-button left-button" on:click={() => scrollOneColumn('left')}>
