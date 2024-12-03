@@ -12,6 +12,9 @@
 	import tailwindConfig from '../../tailwind.config.js';
 	import Loading from '$lib/Loading.svelte';
 
+	// Icons
+	import ZondiconsCheveronDown from '~icons/zondicons/cheveron-down';
+
 	const twFullConfig = resolveConfig(tailwindConfig);
 
 	import { themeManager } from '$lib/theme.svelte';
@@ -538,7 +541,9 @@
 			class="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center space-y-2 md:space-y-0"
 		>
 			<div class="flex justify-center">
-				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap flex items-center gap-[0.3em]">
+				<h1
+					class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap flex items-center gap-[0.3em]"
+				>
 					<img src="/favicon.png" class="h-6 w-6 inline-block" alt="Natsume logo" />
 					Natsume Simple
 				</h1>
@@ -553,35 +558,19 @@
 					<div class="flex space-x-2">
 						<button
 							id="stats-button"
-							class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							class="gap-1 flex bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
 							on:click={() => (statsDropdownOpen = !statsDropdownOpen)}
 						>
 							<span>Stats</span>
-							<svg
-								class="fill-current h-4 w-4 ml-1"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 20 20"
-							>
-								<path
-									d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-								/>
-							</svg>
+							<ZondiconsCheveronDown />
 						</button>
 						<button
 							id="options-button"
-							class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							class="gap-1 flex bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
 							on:click={() => (optionsDropdownOpen = !optionsDropdownOpen)}
 						>
 							<span>Options</span>
-							<svg
-								class="fill-current h-4 w-4 ml-1"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 20 20"
-							>
-								<path
-									d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-								/>
-							</svg>
+							<ZondiconsCheveronDown />
 						</button>
 					</div>
 					{#if statsDropdownOpen}
