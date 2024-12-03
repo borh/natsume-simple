@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
+	import MaterialSymbolsSearch from '~icons/material-symbols/search';
+	import EosIconsLoading from '~icons/eos-icons/loading';
 
 	let {
 		searchType = $bindable(),
@@ -38,6 +39,10 @@
 		onclick={performSearch}
 		disabled={isLoading}
 	>
-		{isLoading ? 'Searching...' : 'Search'}
+		{#if isLoading}
+			<EosIconsLoading />
+		{:else}
+			<MaterialSymbolsSearch />
+		{/if}
 	</button>
 </div>
