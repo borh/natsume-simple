@@ -14,22 +14,7 @@
 
 	const twFullConfig = resolveConfig(tailwindConfig);
 
-	// Dark mode state
-	const darkMode = writable(false);
-
-	// Function to toggle dark mode
-	function toggleDarkMode() {
-		darkMode.update((value) => !value);
-	}
-
-	// Update the HTML class when dark mode changes
-	$: if (typeof document !== 'undefined') {
-		if ($darkMode) {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
-	}
+	import { themeManager } from '$lib/theme.svelte';
 
 	function formatNumber(num: number): string {
 		return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -103,7 +88,7 @@
 
 	function getColor(corpus: string): string {
 		const index = Object.keys(corpusNorm).indexOf(corpus);
-		return $darkMode
+		return themeManager.isDarkMode
 			? highlightColorsDark[index % highlightColorsDark.length]
 			: highlightColors[index % highlightColors.length];
 	}
@@ -614,7 +599,7 @@
 						/>
 					{/if}
 				</div>
-				<ThemeSwitch {toggleDarkMode} {darkMode} />
+				<ThemeSwitch />
 			</div>
 		</div>
 	</header>
