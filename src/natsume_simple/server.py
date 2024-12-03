@@ -11,6 +11,8 @@ import polars as pl  # type: ignore
 from fastapi import FastAPI  # type: ignore
 from fastapi.middleware.cors import CORSMiddleware  # type: ignore
 from fastapi.staticfiles import StaticFiles  # type: ignore
+from collections import Counter
+
 
 app = FastAPI()
 
@@ -79,6 +81,7 @@ def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
     matches = db.filter(pl.col("v") == verb).drop("v").to_dicts()
     return matches
 
+
 # @app.get("/search/{query}")
 # def read_query(query:str) -> List[tuple[str, str]]:
 #     matches = db.select(
@@ -96,14 +99,13 @@ def read_npv_verb(verb: str) -> List[Dict[str, Any]]:
 def read_query(query: str) -> List[tuple[str, str]]:
     # Filter rows containing the query
     matches = (
-        db.filter(pl.col("n").str.contains(query) | pl.col("v").str.contains(query))  # Filter rows where `query` is in either `n` or `v` column
-          .select(["n", "v"])  # Select only the `n` and `v` columns
-          .to_dicts()  # Convert the result to a list of dictionaries
+        db.filter(pl.col("n").str.contains(query) | pl.col("v").str.contains(query))
+        .select(["n", "v"])
+        .to_dicts()
     )
-    
-    # Initialize the result list
+
     result = []
-    
+
     # Iterate through the filtered results
     for row in matches:
         # If the query exists in the `n` column, add it to the result list
@@ -112,10 +114,14 @@ def read_query(query: str) -> List[tuple[str, str]]:
         # If the query exists in the `v` column, add it to the result list
         if query in row["v"]:
             result.append((row["v"], "v"))
-    
-    return result
 
+    tuple_counts = Counter(result)
 
+    sorted_unique_result = sorted(
+        tuple_counts.keys(), key=lambda x: tuple_counts[x], reverse=True
+    )
+
+    return sorted_unique_result
 
 
 app.mount("/", StaticFiles(directory="natsume-frontend/build", html=True), name="app")
