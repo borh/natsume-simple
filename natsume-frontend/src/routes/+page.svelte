@@ -553,7 +553,8 @@
 			class="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center space-y-2 md:space-y-0"
 		>
 			<div class="flex justify-center">
-				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap">
+				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap flex items-center gap-[0.3em]">
+					<img src="/favicon.png" class="h-6 w-6 inline-block" alt="Natsume logo" />
 					Natsume Simple
 				</h1>
 			</div>
