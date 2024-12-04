@@ -1,8 +1,8 @@
 <script lang="ts">
-	import CollocationList from '$lib/CollocationList.svelte';
-	import Search from '$lib/Search.svelte';
-	import Options from '$lib/menus/Options.svelte';
-	import Stats from '$lib/menus/Stats.svelte';
+	import CollocationList from '$lib/components/CollocationList.svelte';
+	import Search from '$lib/components/Search.svelte';
+	import Options from '$lib/components/menus/Options.svelte';
+	import Stats from '$lib/components/menus/Stats.svelte';
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte';
 
 	import { onMount, tick, afterUpdate } from 'svelte';
@@ -10,7 +10,7 @@
 	import './../tailwind.css';
 	import resolveConfig from 'tailwindcss/resolveConfig';
 	import tailwindConfig from '../../tailwind.config.js';
-	import Loading from '$lib/Loading.svelte';
+	import Loading from '$lib/components/Loading.svelte';
 
 	// Icons
 	import ZondiconsCheveronDown from '~icons/zondicons/cheveron-down';
