@@ -23,6 +23,7 @@ function formatNumber(num: number): string {
 	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+import HorizontallyScrollableContainer from "$lib/components/HorizontallyScrollableContainer.svelte";
 import type { CombinedResult, Result } from "$lib/query";
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -611,8 +612,9 @@ afterUpdate(() => {
 			class="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center space-y-2 md:space-y-0"
 		>
 			<div class="flex justify-center">
-				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap flex items-center gap-[0.3em]">
-
+				<h1
+					class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap flex items-center gap-[0.3em]"
+				>
 					<img src="/favicon.png" class="h-6 w-6 inline-block" alt="Natsume logo" />
 					<span class="hidden lg:inline">Natsume Simple</span>
 				</h1>
@@ -654,7 +656,7 @@ afterUpdate(() => {
 					<div class="w-5 h-1 bg-gray-700 dark:bg-gray-300"></div>
 				</button>
 			</div>
-			
+
 			<!--Search bar and button on big screen -->
 			<div class="hidden lg:flex justify-center">
 				<Search bind:searchTerm {performSearch} {isLoading} bind:searchType />
@@ -702,12 +704,15 @@ afterUpdate(() => {
 
 		<!-- Mobile dropdown menu -->
 		{#if showMobileMenu}
-			<div class="block lg:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-2 p-2">
+			<div
+				class="block lg:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-2 p-2"
+			>
 				<div class="space-y-2">
 					<!-- Select dropdown -->
-					<button 
+					<button
 						class="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-left dark:bg-gray-700 dark:hover:bg-gray-600"
-						onclick={() => mobileDropdownOption = mobileDropdownOption === 'select' ? null : 'select'}
+						onclick={() =>
+							(mobileDropdownOption = mobileDropdownOption === 'select' ? null : 'select')}
 					>
 						Select Search Type
 						<span class="float-right">
@@ -727,9 +732,10 @@ afterUpdate(() => {
 					{/if}
 
 					<!-- Stats dropdown -->
-					<button 
+					<button
 						class="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-left dark:bg-gray-700 dark:hover:bg-gray-600"
-						onclick={() => mobileDropdownOption = mobileDropdownOption === 'stats' ? null : 'stats'}
+						onclick={() =>
+							(mobileDropdownOption = mobileDropdownOption === 'stats' ? null : 'stats')}
 					>
 						Stats
 						<span class="float-right">
@@ -743,9 +749,10 @@ afterUpdate(() => {
 					{/if}
 
 					<!-- Options dropdown -->
-					<button 
+					<button
 						class="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-left dark:bg-gray-700 dark:hover:bg-gray-600"
-						onclick={() => mobileDropdownOption = mobileDropdownOption === 'options' ? null : 'options'}
+						onclick={() =>
+							(mobileDropdownOption = mobileDropdownOption === 'options' ? null : 'options')}
 					>
 						Options
 						<span class="float-right">
@@ -767,7 +774,9 @@ afterUpdate(() => {
 					{/if}
 
 					<!-- Theme Switch -->
-					<div class="w-full bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded flex justify-between items-center">
+					<div
+						class="w-full bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded flex justify-between items-center"
+					>
 						<span>Dark Mode</span>
 						<ThemeSwitch/>
 					</div>
@@ -780,11 +789,7 @@ afterUpdate(() => {
 	<header
 		class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 z-10"
 	>
-		<div
-			class="container mx-auto p-0 overflow-x-auto hide-scrollbar"
-			bind:this={headerScrollContainer}
-			onscroll={syncScroll}
-		>
+		<HorizontallyScrollableContainer {syncScroll} bind:scrollContainer={headerScrollContainer}>
 			<div class="flex" style="gap: {columnSpacing}px;">
 				{#if $d && Object.keys($d).length > 0}
 					{#each Object.entries($d) as [particle, collocates]}
@@ -806,7 +811,7 @@ afterUpdate(() => {
 					{/each}
 				{/if}
 			</div>
-		</div>
+		</HorizontallyScrollableContainer>
 	</header>
 
 	<!-- Main content area -->
@@ -816,10 +821,9 @@ afterUpdate(() => {
 				<button class="scroll-button left-button" onclick={() => scrollOneColumn('left')}>
 					<span class="arrow">←</span>
 				</button>
-				<div
-					class="overflow-x-auto"
-					bind:this={mainScrollContainer}
-					onscroll={syncScroll}
+				<HorizontallyScrollableContainer
+					{syncScroll}
+					bind:scrollContainer={mainScrollContainer}
 					style="width: 100%; max-width: 100vw;"
 				>
 					<div class="flex" style="gap: {columnSpacing}px;">
@@ -852,8 +856,8 @@ afterUpdate(() => {
 							</p>
 						{/if}
 					</div>
-				</div>
-				<button class="scroll-button right-button" onclick={() => scrollOneColumn('right')}>
+				</HorizontallyScrollableContainer>
+				<button class="scroll-button right-button" on:click={() => scrollOneColumn('right')}>
 					<span class="arrow">→</span>
 				</button>
 			</div>
@@ -909,19 +913,6 @@ afterUpdate(() => {
 	.arrow {
 		font-size: 18px;
 		line-height: 1;
-	}
-
-	.hide-scrollbar {
-		-ms-overflow-style: none; /* IE and Edge */
-		scrollbar-width: none; /* Firefox */
-	}
-	.hide-scrollbar::-webkit-scrollbar {
-		display: none; /* Chrome, Safari and Opera */
-	}
-
-	.overflow-x-auto {
-		overflow-x: auto !important;
-		-webkit-overflow-scrolling: touch;
 	}
 
 	.relative {
