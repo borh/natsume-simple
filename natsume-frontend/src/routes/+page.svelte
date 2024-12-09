@@ -56,6 +56,10 @@
 	let optionsDropdownOpen = false;
 
 	let isLoading: boolean = false;
+	let showMobileMenu = false;
+	let mobileDropdownOption: 'select' | 'stats' | 'options' | null = null;
+
+
 
 	const d: Writable<Record<string, Result[]>> = writable({});
 
@@ -552,23 +556,62 @@
 		<div
 			class="container mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center space-y-2 md:space-y-0"
 		>
-			<div class="flex justify-center">
+			<div class="flex justify-center items-center w-full">
 				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap">
 					Natsume Simple
 				</h1>
-			</div>
 
-			<div class="flex justify-center">
+				<!-- Search bar on small screen (next to logo) -->
+				<div class="lg:hidden flex-grow mx-2">
+					<div class="flex">
+						<select
+							class="border rounded-l h-8 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+							bind:value={searchType}
+						>
+							<option value="verb">Verb</option>
+							<option value="noun">Noun</option>
+						</select>
+						<input
+							type="text"
+							class="border flex-grow h-8 px-2 text-sm dark:bg-gray-700 dark:text-white dark:border-gray-600"
+							bind:value={searchTerm}
+							placeholder="Search term"
+						/>
+						<button
+							class="bg-red-700 hover:bg-red-500 text-white font-bold px-2 rounded-r h-8 text-sm dark:bg-red-600 dark:hover:bg-red-500"
+							onclick={performSearch}
+							disabled={isLoading}
+						>
+							{isLoading ? 'Searching...' : 'Go'}
+						</button>
+					</div>
+				</div>
+
+				<!-- The hamburger menu on small screen-->
+				<button
+					class="ml-2 block lg:hidden focus:outline-none"
+					onclick={() => (showMobileMenu = !showMobileMenu)}
+				>
+					<!-- A simple icon（3 lines now）-->
+					<div class="w-5 h-1 bg-gray-700 dark:bg-gray-300 mb-1"></div>
+					<div class="w-5 h-1 bg-gray-700 dark:bg-gray-300 mb-1"></div>
+					<div class="w-5 h-1 bg-gray-700 dark:bg-gray-300"></div>
+				</button>
+			</div>
+			
+			<!--Search bar and button on big screen -->
+			<div class="hidden lg:flex justify-center">
 				<Search bind:searchTerm {performSearch} {isLoading} bind:searchType />
 			</div>
 
-			<div class="flex justify-center items-center space-x-2">
+			<!--Stats and options dropdown on big screen -->
+			<div class="hidden lg:flex justify-center items-center space-x-2">
 				<div class="relative inline-block text-left">
 					<div class="flex space-x-2">
 						<button
 							id="stats-button"
 							class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
-							on:click={() => (statsDropdownOpen = !statsDropdownOpen)}
+							onclick={() => (statsDropdownOpen = !statsDropdownOpen)}
 						>
 							<span>Stats</span>
 							<svg
@@ -584,7 +627,7 @@
 						<button
 							id="options-button"
 							class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
-							on:click={() => (optionsDropdownOpen = !optionsDropdownOpen)}
+							onclick={() => (optionsDropdownOpen = !optionsDropdownOpen)}
 						>
 							<span>Options</span>
 							<svg
@@ -616,6 +659,81 @@
 				<ThemeSwitch {toggleDarkMode} {darkMode} />
 			</div>
 		</div>
+
+		<!-- Mobile dropdown menu -->
+		{#if showMobileMenu}
+			<div class="block lg:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-2 p-2">
+				<div class="space-y-2">
+					<!-- Select dropdown -->
+					<button 
+						class="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-left dark:bg-gray-700 dark:hover:bg-gray-600"
+						onclick={() => mobileDropdownOption = mobileDropdownOption === 'select' ? null : 'select'}
+					>
+						Select Search Type
+						<span class="float-right">
+							{mobileDropdownOption === 'select' ? '▲' : '▼'}
+						</span>
+					</button>
+					{#if mobileDropdownOption === 'select'}
+						<div class="p-2 bg-gray-100 dark:bg-gray-700 rounded">
+							<select
+								class="border rounded h-8 w-full dark:bg-gray-600 dark:text-white dark:border-gray-500"
+								bind:value={searchType}
+							>
+								<option value="verb">Verb (Noun-Particle-Verb)</option>
+								<option value="noun">Noun (Noun-Particle-Verb)</option>
+							</select>
+						</div>
+					{/if}
+
+					<!-- Stats dropdown -->
+					<button 
+						class="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-left dark:bg-gray-700 dark:hover:bg-gray-600"
+						onclick={() => mobileDropdownOption = mobileDropdownOption === 'stats' ? null : 'stats'}
+					>
+						Stats
+						<span class="float-right">
+							{mobileDropdownOption === 'stats' ? '▲' : '▼'}
+						</span>
+					</button>
+					{#if mobileDropdownOption === 'stats'}
+						<div class="p-2 bg-gray-100 dark:bg-gray-700 rounded">
+							<Stats {corpusNorm} {filteredResultCount} {searchElapsedTime} {formatNumber} />
+						</div>
+					{/if}
+
+					<!-- Options dropdown -->
+					<button 
+						class="w-full bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded text-left dark:bg-gray-700 dark:hover:bg-gray-600"
+						onclick={() => mobileDropdownOption = mobileDropdownOption === 'options' ? null : 'options'}
+					>
+						Options
+						<span class="float-right">
+							{mobileDropdownOption === 'options' ? '▲' : '▼'}
+						</span>
+					</button>
+					{#if mobileDropdownOption === 'options'}
+						<div class="p-2 bg-gray-100 dark:bg-gray-700 rounded">
+							<Options
+								{useNormalization}
+								{combinedSearch}
+								{selectedCorpora}
+								{getColor}
+								{getSolidColor}
+								{corpusNorm}
+								{handleCheckboxChange}
+							/>
+						</div>
+					{/if}
+
+					<!-- Theme Switch -->
+					<div class="w-full bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded flex justify-between items-center">
+						<span>Dark Mode</span>
+						<ThemeSwitch {toggleDarkMode} {darkMode} />
+					</div>
+				</div>
+			</div>
+		{/if}
 	</header>
 
 	<!-- Sticky particles header -->
@@ -625,7 +743,7 @@
 		<div
 			class="container mx-auto p-0 overflow-x-auto hide-scrollbar"
 			bind:this={headerScrollContainer}
-			on:scroll={syncScroll}
+			onscroll={syncScroll}
 		>
 			<div class="flex" style="gap: {columnSpacing}px;">
 				{#if $d && Object.keys($d).length > 0}
@@ -655,13 +773,13 @@
 	<main class="flex-1 pt-0">
 		<div class="container mx-auto p-0">
 			<div class="relative">
-				<button class="scroll-button left-button" on:click={() => scrollOneColumn('left')}>
+				<button class="scroll-button left-button" onclick={() => scrollOneColumn('left')}>
 					<span class="arrow">←</span>
 				</button>
 				<div
 					class="overflow-x-auto"
 					bind:this={mainScrollContainer}
-					on:scroll={syncScroll}
+					onscroll={syncScroll}
 					style="width: 100%; max-width: 100vw;"
 				>
 					<div class="flex" style="gap: {columnSpacing}px;">
@@ -695,7 +813,7 @@
 						{/if}
 					</div>
 				</div>
-				<button class="scroll-button right-button" on:click={() => scrollOneColumn('right')}>
+				<button class="scroll-button right-button" onclick={() => scrollOneColumn('right')}>
 					<span class="arrow">→</span>
 				</button>
 			</div>
