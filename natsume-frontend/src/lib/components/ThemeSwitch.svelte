@@ -1,20 +1,12 @@
 <script lang="ts">
-	import type { Writable } from 'svelte/store';
-
-	let {
-		toggleDarkMode,
-		darkMode
-	}: {
-		toggleDarkMode: () => void;
-		darkMode: Writable<boolean>;
-	} = $props();
+	import { themeManager } from '$lib/theme.svelte';
 </script>
 
 <button
 	class="ml-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-	onclick={toggleDarkMode}
+	onclick={() => themeManager.toggle()}
 >
-	{#if $darkMode}
+	{#if themeManager.isDarkMode}
 		<svg
 			class="w-6 h-6 text-yellow-300"
 			fill="none"

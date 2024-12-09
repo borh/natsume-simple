@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Result, CombinedResult } from './query';
+	import type { Result, CombinedResult } from '$lib/query';
 	import { type Writable } from 'svelte/store';
 	let {
 		collocates,
