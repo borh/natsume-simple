@@ -1,5 +1,6 @@
 <script>
-	let { corpusNorm, filteredResultCount, searchElapsedTime, formatNumber } = $props();
+const { corpusNorm, filteredResultCount, searchElapsedTime, formatNumber } =
+	$props();
 </script>
 
 <div

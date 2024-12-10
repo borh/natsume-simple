@@ -1,13 +1,13 @@
 <script>
-	let {
-		useNormalization,
-		combinedSearch,
-		selectedCorpora,
-		getColor,
-		getSolidColor,
-		corpusNorm,
-		handleCheckboxChange
-	} = $props();
+const {
+	useNormalization,
+	combinedSearch,
+	selectedCorpora,
+	getColor,
+	getSolidColor,
+	corpusNorm,
+	handleCheckboxChange,
+} = $props();
 </script>
 
 <div

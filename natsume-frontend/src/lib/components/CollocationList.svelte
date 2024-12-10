@@ -1,45 +1,48 @@
 <script lang="ts">
-	import type { Result, CombinedResult } from '$lib/query';
-	import { type Writable } from 'svelte/store';
-	let {
-		collocates,
-		combinedSearch,
-		getColor,
-		tooltipAction,
-		renderContributions,
-		renderContributionsCombined,
-		useNormalization,
-		selectedCorpora,
-		getSolidColor,
-		corpusNorm
-	}: {
-		collocates: Result[];
-		combinedSearch: Writable<boolean>;
-		getColor: (corpus: string) => string;
-		tooltipAction: (
-			node: HTMLLIElement,
-			{
-				getTooltipData,
-				useNormalization
-			}: { getTooltipData: () => Record<string, number>; useNormalization: boolean }
-		) => void;
-		renderContributions: (
-			collocate: Result,
-			collocates: Result[],
-			selectedCorpora: string[],
-			useNormalization: boolean
-		) => { corpus: string; width: number; xOffset: number; value: number }[];
-		renderContributionsCombined: (
-			collocate: CombinedResult,
-			collocates: Result[],
-			selectedCorpora: string[],
-			useNormalization: boolean
-		) => { corpus: string; width: number; xOffset: number; value: number }[];
-		useNormalization: Writable<boolean>;
-		selectedCorpora: Writable<string[]>;
-		getSolidColor: (corpus: string) => string;
-		corpusNorm: Record<string, number>;
-	} = $props();
+import type { CombinedResult, Result } from "$lib/query";
+import type { Writable } from "svelte/store";
+const {
+	collocates,
+	combinedSearch,
+	getColor,
+	tooltipAction,
+	renderContributions,
+	renderContributionsCombined,
+	useNormalization,
+	selectedCorpora,
+	getSolidColor,
+	corpusNorm,
+}: {
+	collocates: Result[];
+	combinedSearch: Writable<boolean>;
+	getColor: (corpus: string) => string;
+	tooltipAction: (
+		node: HTMLLIElement,
+		{
+			getTooltipData,
+			useNormalization,
+		}: {
+			getTooltipData: () => Record<string, number>;
+			useNormalization: boolean;
+		},
+	) => void;
+	renderContributions: (
+		collocate: Result,
+		collocates: Result[],
+		selectedCorpora: string[],
+		useNormalization: boolean,
+	) => { corpus: string; width: number; xOffset: number; value: number }[];
+	renderContributionsCombined: (
+		collocate: CombinedResult,
+		collocates: Result[],
+		selectedCorpora: string[],
+		useNormalization: boolean,
+	) => { corpus: string; width: number; xOffset: number; value: number }[];
+	useNormalization: Writable<boolean>;
+	selectedCorpora: Writable<string[]>;
+	getSolidColor: (corpus: string) => string;
+	corpusNorm: Record<string, number>;
+} = $props();
 </script>
 
 {#snippet frequencyBar(collocate: Result | CombinedResult)}
