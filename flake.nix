@@ -57,6 +57,7 @@
             pkgs.git
             pkgs.git-cliff # Changelog generator
             pkgs.bun
+            pkgs.biome
             pkgs.wget
             pkgs.pandoc
             pkgs.sqlite
@@ -155,6 +156,7 @@
               uv run ruff format
               uv run ruff check --fix --select I --output-format=github src notebooks tests
               ${pkgs.mypy}/bin/mypy --ignore-missing-imports src
+              ${pkgs.biome}/bin/biome check --write natsume-frontend
             '';
           };
           packages.build-frontend = pkgs.writeShellApplication {
