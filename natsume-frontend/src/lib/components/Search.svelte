@@ -8,7 +8,7 @@ import MaterialSymbolsSearch from "~icons/material-symbols/search";
 
 const { debounce } = pkg;
 
-const {
+let {
 	searchTerm = $bindable(""),
 	searchType = $bindable<"verb" | "noun">("verb"),
 	performSearch = () => {},

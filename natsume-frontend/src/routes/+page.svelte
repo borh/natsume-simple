@@ -29,8 +29,8 @@ const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const particles = ["が", "を", "に", "で", "から", "より", "と", "へ"];
 const results = writable<Result[]>([]);
 
-const searchType: "verb" | "noun" = "noun";
-const searchTerm = "時間";
+let searchType: "verb" | "noun" = "noun";
+let searchTerm = "時間";
 
 const lastSearchedNoun = writable("");
 let corpusNorm: Record<string, number> = {};
@@ -44,8 +44,8 @@ let statsDropdownOpen = false;
 let optionsDropdownOpen = false;
 
 let isLoading = false;
-const showMobileMenu = false;
-const mobileDropdownOption: "select" | "stats" | "options" | null = null;
+let showMobileMenu = false;
+let mobileDropdownOption: "select" | "stats" | "options" | null = null;
 
 const d: Writable<Record<string, Result[]>> = writable({});
 
