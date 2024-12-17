@@ -1,0 +1,5 @@
+{
+	"[svelte][javascript][typescript][json][css][scss][html]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	}
+}
