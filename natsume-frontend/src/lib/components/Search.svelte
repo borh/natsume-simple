@@ -76,16 +76,18 @@ onMount(() => {
 <div class="flex items-center space-x-1 relative" bind:this={containerElement}>
 	<!-- Select searching pattern -->
 	<select
-		class="border rounded h-8 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-		bind:value={searchType}
-	>
-		<option value="verb">Verb(Noun-Particle-Verb)</option>
-		<option value="noun">Noun(Noun-Particle-Verb)</option>
-	</select>
+    class="border rounded h-8 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+    bind:value={searchType}
+  >
+  <option value="verb">Verb(Noun-Particle-Verb)</option>
+  <option value="noun">Noun(Noun-Particle-Verb)</option>
+</select>
+
+	<div class="relative inline-block">
 	<input
-		class="text-lg p-1 border rounded mr-2 h-8 w-40 sm:w-auto dark:bg-gray-700 dark:text-white dark:border-gray-600"
-		id="search-input"
-		name="search-input"
+	class="text-lg p-1 border rounded mr-2 h-8 w-40 sm:w-auto dark:bg-gray-700 dark:text-white dark:border-gray-600"
+	id="search-input"
+	name="search-input"
 		bind:value={searchTerm}
 		onkeypress={(e) => {
 			if (e.key === 'Enter') {
@@ -97,66 +99,38 @@ onMount(() => {
 		autocomplete="off"
 	/>
 
-	{#if $showSuggestions}
-		<ul class="suggestions-list">
-			{#each $suggestions as suggestion}
-				<li
-					class="suggestion-item"
-					onclick={() => {
-						searchTerm = suggestion.word;
-						showSuggestions.set(false);
-						performSearch();
-					}}
-				>
-					{suggestion.word}
-				</li>
-			{/each}
-		</ul>
-	{/if}
+    {#if $showSuggestions}
+      <ul class="absolute top-full left-0 bg-white border border-gray-300 max-h-[200px] overflow-y-auto min-w-full z-[1000] dark:bg-[#2d2d2d] dark:text-white">
+        {#each $suggestions as suggestion}
+          <li
+            class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800"
 
-	<button
-		class="bg-red-700 hover:bg-red-500 text-white font-bold py-1 px-2 rounded h-8 text-sm dark:bg-red-600 dark:hover:bg-red-500"
-		onclick={() => performSearch()}
-		disabled={isLoading}
-	>
-		{#if isLoading}
-			<EosIconsLoading />
-		{:else}
-			<MaterialSymbolsSearch />
-		{/if}
-	</button>
+          >
+		  <button
+		              onclick={() => {
+              searchTerm = suggestion.word;
+              showSuggestions.set(false);
+              performSearch();
+            }}
+		  >
+			      {suggestion.word}
+		  </button>
+
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
+
+  <button
+    class="bg-red-700 hover:bg-red-500 text-white font-bold py-1 px-2 rounded h-8 text-sm dark:bg-red-600 dark:hover:bg-red-500"
+    onclick={() => performSearch()}
+    disabled={isLoading}
+  >
+    {#if isLoading}
+      <EosIconsLoading />
+    {:else}
+      <MaterialSymbolsSearch />
+    {/if}
+  </button>
 </div>
-
-<style>
-	.suggestions-list {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		background-color: white;
-		border: 1px solid #ccc;
-		max-height: 200px;
-		overflow-y: auto;
-		width: auto;
-		min-width: 100%;
-		z-index: 1000;
-	}
-
-	.suggestion-item {
-		padding: 8px;
-		cursor: pointer;
-	}
-
-	.suggestion-item:hover {
-		background-color: #f0f0f0;
-	}
-
-	/* dark mode */
-	.dark .suggestions-list {
-		background-color: #2d2d2d;
-		color: white;
-	}
-
-	.dark .suggestion-item:hover {
-		background-color: #3d3d3d;
-	}
-</style>

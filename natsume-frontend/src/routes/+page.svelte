@@ -614,7 +614,7 @@ afterUpdate(() => {
 				<h1 class="text-xl text-red-600 dark:text-red-400 font-bold mr-2 whitespace-nowrap flex items-center gap-[0.3em]">
 
 					<img src="/favicon.png" class="h-6 w-6 inline-block" alt="Natsume logo" />
-					Natsume Simple
+					<span class="hidden lg:inline">Natsume Simple</span>
 				</h1>
 
 				<!-- Search bar on small screen (next to logo) -->
@@ -769,7 +769,7 @@ afterUpdate(() => {
 					<!-- Theme Switch -->
 					<div class="w-full bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded flex justify-between items-center">
 						<span>Dark Mode</span>
-						<ThemeSwitch {toggleDarkMode} {darkMode} />
+						<ThemeSwitch/>
 					</div>
 				</div>
 			</div>
