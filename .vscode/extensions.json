@@ -1,0 +1,18 @@
+{
+	"recommendations": [
+		"mkhl.direnv",
+		"ms-python.python",
+		"svelte.svelte-vscode",
+		"oven.bun-vscode",
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"bradlc.vscode-tailwindcss",
+		"svelte.svelte-vscode",
+		"eamodio.gitlens",
+		"editorconfig.editorconfig",
+		"antfu.iconify",
+		"hyoban.tailwindcss-classname-highlight",
+		"jnoortheen.nix-ide",
+		"ms-toolsai.jupyter"
+	]
+}
