@@ -60,10 +60,9 @@ const filteredResultCount = derived(
 				collocates.filter(
 					(collocate) =>
 						$selectedCorpora.includes(collocate.corpus) ||
-						(collocate.contributions &&
-							collocate.contributions.some((c) =>
-								$selectedCorpora.includes(c.corpus),
-							)),
+						collocate.contributions?.some((c) =>
+							$selectedCorpora.includes(c.corpus),
+						),
 				).length
 			);
 		}, 0);
@@ -172,7 +171,6 @@ function renderContributionsCombined(
 			return result;
 		});
 }
-
 function calculateCorpusDistribution(
 	collocates: (Result | CombinedResult)[],
 	useNormalization: boolean,
@@ -180,17 +178,15 @@ function calculateCorpusDistribution(
 ): Record<string, number> {
 	console.log("Calculating corpus distribution", collocates);
 	const distribution: Record<string, number> = {};
-	collocates.forEach((collocate) => {
+	for (const collocate of collocates) {
 		if (collocate.contributions && collocate.contributions.length > 0) {
 			// Combined search mode
-			collocate.contributions.forEach(
-				({ corpus, frequency }: { corpus: string; frequency: number }) => {
-					distribution[corpus] =
-						(distribution[corpus] || 0) +
-						frequency *
-							(useNormalization && corpusNorm[corpus] ? corpusNorm[corpus] : 1);
-				},
-			);
+			for (const { corpus, frequency } of collocate.contributions) {
+				distribution[corpus] =
+					(distribution[corpus] || 0) +
+					frequency *
+						(useNormalization && corpusNorm[corpus] ? corpusNorm[corpus] : 1);
+			}
 		} else if ("corpus" in collocate) {
 			// Non-combined search mode
 			const corpus = collocate.corpus;
@@ -199,7 +195,7 @@ function calculateCorpusDistribution(
 				collocate.frequency *
 					(useNormalization && corpusNorm[corpus] ? corpusNorm[corpus] : 1);
 		}
-	});
+	}
 	console.log("Corpus distribution result:", distribution);
 	return distribution;
 }
@@ -307,7 +303,7 @@ function computeDerivedData(
 	combinedSearch: boolean,
 ) {
 	console.log("Computing derived data");
-	let derivedData;
+	let derivedData: Record<string, CombinedResult[]>;
 	if (combinedSearch) {
 		// Combine results across all particles first
 		const combinedResults = results.reduce<Record<string, CombinedResult>>(
@@ -427,12 +423,12 @@ function getMax(
 						(c) => c.frequency * (useNormalization ? corpusNorm[c.corpus] : 1),
 					),
 				);
-			} else {
-				return (
-					x.frequency *
-					(useNormalization && "corpus" in x ? corpusNorm[x.corpus] : 1)
-				);
 			}
+
+			return (
+				x.frequency *
+				(useNormalization && "corpus" in x ? corpusNorm[x.corpus] : 1)
+			);
 		}),
 		0.0,
 	);
@@ -468,7 +464,7 @@ function tooltipAction(
 		useNormalization: boolean;
 	},
 ) {
-	const handleMouseover = (event: any) => {
+	const handleMouseover = (event: MouseEvent) => {
 		const tooltipData = getTooltipData();
 		const tooltipText = Object.entries(tooltipData)
 			.map(([corpus, value]) => {
@@ -668,7 +664,7 @@ afterUpdate(() => {
 					<div class="flex space-x-2">
 						<button
 							id="stats-button"
-							class="gap-1 flex bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							class="gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
 							onclick={() => (statsDropdownOpen = !statsDropdownOpen)}
 						>
 							<span>Stats</span>
@@ -676,7 +672,7 @@ afterUpdate(() => {
 						</button>
 						<button
 							id="options-button"
-							class="gap-1 flex bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							class="gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
 							onclick={() => (optionsDropdownOpen = !optionsDropdownOpen)}
 						>
 							<span>Options</span>

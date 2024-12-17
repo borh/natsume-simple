@@ -1,5 +1,16 @@
 {
 	"[svelte][javascript][typescript][json][css][scss][html]": {
 		"editor.defaultFormatter": "biomejs.biome"
-	}
+	},
+	"cSpell.ignorePaths": [
+		"package.json",
+		"package-lock.json",
+		"node_modules",
+		"vscode-extension",
+		".git/{info,lfs,logs,refs,objects}/**",
+		".git/{index,*refs,*HEAD}",
+		".vscode",
+		".vscode-insiders",
+		".devcontainer"
+	]
 }
