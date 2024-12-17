@@ -664,7 +664,7 @@ afterUpdate(() => {
 					<div class="flex space-x-2">
 						<button
 							id="stats-button"
-							class="gap-1 flex bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							class="gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
 							onclick={() => (statsDropdownOpen = !statsDropdownOpen)}
 						>
 							<span>Stats</span>
@@ -672,7 +672,7 @@ afterUpdate(() => {
 						</button>
 						<button
 							id="options-button"
-							class="gap-1 flex bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+							class="gap-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-1 px-2 rounded inline-flex items-center text-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
 							onclick={() => (optionsDropdownOpen = !optionsDropdownOpen)}
 						>
 							<span>Options</span>
