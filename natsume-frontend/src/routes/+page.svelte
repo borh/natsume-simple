@@ -778,7 +778,7 @@ afterUpdate(() => {
 						class="w-full bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded flex justify-between items-center"
 					>
 						<span>Dark Mode</span>
-						<ThemeSwitch/>
+						<ThemeSwitch />
 					</div>
 				</div>
 			</div>
@@ -857,7 +857,7 @@ afterUpdate(() => {
 						{/if}
 					</div>
 				</HorizontallyScrollableContainer>
-				<button class="scroll-button right-button" on:click={() => scrollOneColumn('right')}>
+				<button class="scroll-button right-button" onclick={() => scrollOneColumn('right')}>
 					<span class="arrow">→</span>
 				</button>
 			</div>
