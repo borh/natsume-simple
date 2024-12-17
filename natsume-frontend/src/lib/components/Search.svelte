@@ -100,7 +100,7 @@ onMount(() => {
 	/>
 
     {#if $showSuggestions}
-      <ul class="absolute top-full left-0 bg-white border border-gray-300 max-h-[200px] overflow-y-auto min-w-full z-[1000] dark:bg-[#2d2d2d] dark:text-white">
+      <ul class="absolute top-full left-0 bg-white border border-gray-300 min-w-full z-[1000] dark:bg-[#2d2d2d] dark:text-white">
         {#each $suggestions as suggestion}
           <li
             class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:bg-gray-800"
