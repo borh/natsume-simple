@@ -34,7 +34,7 @@
 	},
 	"updateContentCommand": "direnv reload",
 	"postStartCommand": "direnv allow",
-	"runArgs": ["--userns=keep-id"],
+	"runArgs": ["--userns=keep-id", "--gpus=all"],
 	"containerEnv": {
 		"HOME": "/home/vscode"
 	}
