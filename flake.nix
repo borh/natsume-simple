@@ -120,9 +120,13 @@
                   # Set up Python and dependencies
                   ${config.packages.initial-setup}/bin/initial-setup
 
-                  # Enter venv by default via bash (ignoring existing configs)
-                  echo "Entering natsume-simple venv via uv..."
-                  exec uv run ${pkgs.bashInteractive}/bin/bash --noprofile --norc
+                  # Enter venv by default via bash (ignoring existing configs):
+                  # This is disabled as it conflicts with direnv and precludes possibilty of using other shells.
+                  # exec uv run ${pkgs.bashInteractive}/bin/bash --noprofile --norc
+                  echo "Entering natsume-simple venv..."
+                  source .venv/bin/activate
+                  echo "Available commands:"
+                  echo "  ${lib.strings.concatStringsSep "\n  " (builtins.attrNames self'.packages)}"
                 '';
             };
             # TODO: Make backend, data, and frontend-specific devShells as well
